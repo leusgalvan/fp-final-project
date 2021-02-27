@@ -1,3 +1,9 @@
 package fpfinal.model
 
-case class Person() {}
+import fpfinal.app.Configuration.IsValid
+
+case class Person private (name: String)
+
+object Person {
+  def createPerson(name: String): IsValid[Person] = ???
+}
