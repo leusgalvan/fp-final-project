@@ -14,3 +14,10 @@ trait PersonService {
     def addPerson()
   }
 }
+
+trait LivePersonService extends PersonService {
+  override val personService: Service = new Service {
+    override def findByName(name: String): PersonOp[Person] = ???
+    override def addPerson(): Unit = ???
+  }
+}
