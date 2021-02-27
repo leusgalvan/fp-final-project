@@ -8,5 +8,7 @@ trait FakeController extends Controller {
   override val controller: Service = new Service {
     override def getCommandByNumber(number: Int): Option[Command] =
       commands.get(number)
+
+    override def getAllCommands: Array[Command] = commands.values.toArray
   }
 }

@@ -6,6 +6,7 @@ trait Controller {
   val controller: Service
 
   trait Service {
+    def getAllCommands: Array[Command]
     def getCommandByNumber(number: Int): Option[Command]
   }
 }
@@ -15,6 +16,7 @@ trait LiveController extends Controller {
 
   override val controller = new Service {
     override def getCommandByNumber(number: Int): Option[Command] =
-      Try(allCommands(number - 1)).toOption
+      Try(allCommands(number)).toOption
+    override def getAllCommands: Array[Command] = allCommands
   }
 }

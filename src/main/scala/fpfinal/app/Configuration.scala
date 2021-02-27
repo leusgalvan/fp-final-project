@@ -1,11 +1,13 @@
 package fpfinal.app
 
-import cats.data.{NonEmptyChain, ReaderT, StateT, Validated}
+import cats._
+import cats.data._
+import cats.implicits._
 import fpfinal.service.{ExpenseService, LiveExpenseService}
 
 object Configuration {
   type IsValid[A] = Validated[NonEmptyChain[String], A]
-  class AppState()
+  case class AppState()
   type Error = String
   type ErrorOr[A] = Either[Error, A]
   type St[A] = StateT[ErrorOr, AppState, A]
@@ -15,4 +17,5 @@ object Configuration {
     with LiveConsole
     with LiveController
   type AppOp[A] = ReaderT[St, Environment, A]
+  def readEnv: AppOp[Environment] = ReaderT.ask[St, Environment]
 }

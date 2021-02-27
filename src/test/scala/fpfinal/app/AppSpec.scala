@@ -1,6 +1,7 @@
 package fpfinal.app
 
 import fpfinal.FakeEnv
+import fpfinal.app.Configuration.liveEnv
 import org.scalatest.funsuite.AnyFunSuite
 
 class AppSpec extends AnyFunSuite {
@@ -9,7 +10,7 @@ class AppSpec extends AnyFunSuite {
       override val commands: Map[Int, Command] = Map(1 -> AddExpenseCommand)
       override var linesToRead: List[String] = List("1")
     }
-    App.run().run(fakeEnv)
+    App.run().run(liveEnv)
     println(fakeEnv.callsToAddExpense)
     println(fakeEnv.linesWritten)
   }
