@@ -2,7 +2,7 @@ package fpfinal.app
 
 import cats._
 import cats.implicits._
-import fpfinal.app.Configuration.{AppOp, SuccessMsg}
+import fpfinal.app.Configuration.{AppOp, SuccessMsg, readEnv}
 
 import scala.collection.immutable.SortedSet
 import scala.io.StdIn
@@ -18,25 +18,56 @@ object Command {
 
 object AddExpenseCommand extends Command {
   val name = "Add expense"
+
+  case class AddExpenseData(
+      payer: String,
+      amount: Double,
+      participants: SortedSet[String]
+  )
+
   def execute(): AppOp[SuccessMsg] = {
-    def readLine(msg: String): AppOp[String] =
-      Applicative[AppOp].pure {
-        StdIn.readLine(msg)
-      }
+    implicit val ME = MonadError[AppOp, String]
+
+    def readPayer(): AppOp[String] = {
+      for {
+        env <- readEnv
+        name = env.console.readLine("Enter payer's name: ")
+      } yield name
+    }
+
+    def readAmount(): AppOp[Double] = {
+      for {
+        env <- readEnv
+        amount <-
+          env.console
+            .readDouble("Enter amount: ")
+            .pure[AppOp]
+            .ensure("Invalid double)")(_.nonEmpty)
+      } yield amount
+    }
 
     def readParticipants(): AppOp[SortedSet[String]] = {
       for {
-        p <- readLine(s"Enter name of participant (or END to finish): ")
+        env <- readEnv
+        p = env.console.readLine(
+          s"Enter name of participant (or END to finish): "
+        )
         ps <-
           if (p === "END") SortedSet.empty[String].pure[AppOp]
           else readParticipants()
       } yield ps + p
     }
 
+    def readData(): AppOp[AddExpenseData] = {
+      for {
+        payer <- readPayer()
+        amount <- readAmount()
+        participants <- readParticipants()
+      } yield AddExpenseData(payer, amount, participants)
+    }
+
     for {
-      payer <- readLine("Enter payer's name: ")
-      amount <- readLine("Enter amount: ")
-      participants <- readParticipants()
+      addExpenseData <- readData()
     } yield "yay"
   }
 }
