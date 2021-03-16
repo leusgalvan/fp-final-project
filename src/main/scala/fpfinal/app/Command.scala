@@ -2,7 +2,8 @@ package fpfinal.app
 
 import cats._
 import cats.implicits._
-import fpfinal.app.Configuration.{AppOp, SuccessMsg, readEnv}
+import fpfinal.app.Configuration.{AppOp, St, SuccessMsg, readEnv}
+import fpfinal.model.Expense
 
 import scala.collection.immutable.SortedSet
 import scala.io.StdIn
@@ -66,8 +67,19 @@ object AddExpenseCommand extends Command {
       } yield AddExpenseData(payer, amount, participants)
     }
 
+    // StateT[Eval, ExpenseState, A] to
+    // ReaderT[
+    //   StateT[Either[String, *], AppState, *],
+    //   ExpenseService with PersonService with Console with Controller,
+    //   A
+    // ]
     for {
+      env <- readEnv
       addExpenseData <- readData()
+      payer = env.personService.findByName(addExpenseData.payer)
+      amount = ???
+      participants = ???
+      expense = Expense.create(payer, amount, participants)
     } yield "yay"
   }
 }

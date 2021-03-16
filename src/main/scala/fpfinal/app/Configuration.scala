@@ -3,6 +3,8 @@ package fpfinal.app
 import cats._
 import cats.data._
 import cats.implicits._
+import fpfinal.service.ExpenseService.ExpenseState
+import fpfinal.service.PersonService.PersonState
 import fpfinal.service.{
   ExpenseService,
   LiveExpenseService,
@@ -12,9 +14,9 @@ import fpfinal.service.{
 
 object Configuration {
   type IsValid[A] = Validated[NonEmptyChain[String], A]
-  case class AppState()
+  case class AppState(expenseState: ExpenseState, personState: PersonState)
   type Error = String
-  type ErrorOr[A] = Either[Error, A]
+  type ErrorOr[A] = EitherT[IO, Error, A]
   type St[A] = StateT[ErrorOr, AppState, A]
   type SuccessMsg = String
   type Environment = ExpenseService

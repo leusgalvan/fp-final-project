@@ -17,6 +17,7 @@ trait LiveController extends Controller {
   override val controller = new Service {
     override def getCommandByNumber(number: Int): Option[Command] =
       Try(allCommands(number)).toOption
+
     override def getAllCommands: Array[Command] = allCommands
   }
 }

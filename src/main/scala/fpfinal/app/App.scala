@@ -1,11 +1,15 @@
 package fpfinal.app
 
-import fpfinal.app.Configuration.{AppOp, Environment, St, readEnv}
+import fpfinal.app.Configuration.{AppOp, Environment, St, SuccessMsg, readEnv}
 import cats._
 import cats.implicits._
-import cats.data._
+import Syntax._
+
+import scala.annotation.tailrec
 
 object App {
+  val ME = MonadError[AppOp, String]
+
   def printOptions: AppOp[Unit] = {
     def mkOptionsString(commands: List[Command]): String = {
       val header: String = "Please select an option: "
@@ -19,32 +23,34 @@ object App {
       env <- readEnv
       allCommands = env.controller.getAllCommands
       options = mkOptionsString(allCommands.toList)
-      _ = env.console.printLine(options)
+      _ <- env.console.printLine(options).toAppOp
     } yield ()
   }
 
-  def readCommand(): AppOp[Int] =
+  def readCommand(): AppOp[Int] = {
     for {
       env <- readEnv
-      option = env.console.readLine("Your option: ")
-    } yield option.toInt
+      option <- env.console.readLine("Your option: ").toAppOp
+      cmdNumber <- ME.fromOption(option.toIntOption, "Invalid option selected")
+    } yield cmdNumber
+  }
 
   def run(): AppOp[Unit] = {
-    val loop: AppOp[Unit] =
+    def loop: AppOp[Unit] =
       for {
         env <- readEnv
         _ <- printOptions
         commandNumber <- readCommand()
         command = env.controller.getCommandByNumber(commandNumber)
-        message <- command.fold(
-          MonadError[AppOp, String].raiseError[String]("Command not found")
+        successMsg <- command.fold(
+          ME.raiseError[SuccessMsg]("Command not found")
         )(_.execute())
-        _ = env.console.printLine(message)
-        _ <- run
+        _ <- env.console.printLine(successMsg).toAppOp
+        _ <- loop
       } yield ()
 
-    MonadError[AppOp, String].handleErrorWith(loop) { errorMessage =>
-      readEnv.map(_.console.printLine(errorMessage)).flatMap(_ => run())
+    ME.handleErrorWith(loop) { errorMessage =>
+      readEnv.map(_.console.printLine(errorMessage)) >> run()
     }
   }
 }
