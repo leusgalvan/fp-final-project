@@ -2,11 +2,10 @@ package fpfinal.app
 
 import cats._
 import cats.implicits._
-import fpfinal.app.Configuration.{AppOp, St, SuccessMsg, readEnv}
+import fpfinal.app.Configuration.{AppOp, SuccessMsg, readEnv}
 import fpfinal.model.Expense
-
+import Syntax._
 import scala.collection.immutable.SortedSet
-import scala.io.StdIn
 
 sealed trait Command {
   val name: String
@@ -19,6 +18,7 @@ object Command {
 
 object AddExpenseCommand extends Command {
   val name = "Add expense"
+  implicit val ME = MonadError[AppOp, String]
 
   case class AddExpenseData(
       payer: String,
@@ -27,32 +27,30 @@ object AddExpenseCommand extends Command {
   )
 
   def execute(): AppOp[SuccessMsg] = {
-    implicit val ME = MonadError[AppOp, String]
-
     def readPayer(): AppOp[String] = {
       for {
         env <- readEnv
-        name = env.console.readLine("Enter payer's name: ")
+        name <- env.console.readLine("Enter payer's name: ").toAppOp
       } yield name
     }
 
     def readAmount(): AppOp[Double] = {
       for {
         env <- readEnv
-        amount <-
-          env.console
-            .readDouble("Enter amount: ")
-            .pure[AppOp]
-            .ensure("Invalid double)")(_.nonEmpty)
+        amountStr <- env.console.readDouble("Enter amount: ").toAppOp
+        amount <- ME.fromOption(amountStr, "Invalid amount")
       } yield amount
     }
 
     def readParticipants(): AppOp[SortedSet[String]] = {
       for {
         env <- readEnv
-        p = env.console.readLine(
-          s"Enter name of participant (or END to finish): "
-        )
+        p <-
+          env.console
+            .readLine(
+              s"Enter name of participant (or END to finish): "
+            )
+            .toAppOp
         ps <-
           if (p === "END") SortedSet.empty[String].pure[AppOp]
           else readParticipants()
