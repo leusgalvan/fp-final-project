@@ -5,6 +5,7 @@ import cats.implicits._
 import fpfinal.app.Configuration.{AppOp, IsValid, SuccessMsg, readEnv}
 import fpfinal.model.{Expense, Money}
 import Syntax._
+import fpfinal.app.Validations._
 
 import scala.collection.immutable.SortedSet
 
@@ -63,7 +64,13 @@ object AddExpenseCommand extends Command {
         amount: String,
         participants: List[String]
     ): IsValid[AddExpenseData] = {
-      ???
+      (
+        nonEmptyString(payer),
+        double(amount),
+        participants.traverse(nonEmptyString)
+      ).mapN { (p, a, ps) =>
+        AddExpenseData(p, a, ps)
+      }
     }
 
     def readData(): AppOp[AddExpenseData] = {
