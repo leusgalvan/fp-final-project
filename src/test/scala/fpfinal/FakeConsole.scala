@@ -1,20 +1,28 @@
 package fpfinal
 
-import fpfinal.app.Console
+import cats._
+import cats.implicits._
+import fpfinal.app.{Console, IO}
 
 trait FakeConsole extends Console {
   var linesToRead: List[String]
   var linesWritten: Vector[String] = Vector.empty
 
   override val console: Service = new Service {
-    override def readLine(msg: String): String = {
-      val hd = linesToRead.head
-      linesToRead = linesToRead.tail
-      hd
+    override def readLine(msg: String): IO[String] = {
+      IO {
+        val hd = linesToRead.head
+        linesToRead = linesToRead.tail
+        hd
+      }
     }
 
-    override def printLine(line: String): Unit =
-      linesWritten = linesWritten :+ line
+    override def printLine(line: String): IO[Unit] =
+      IO {
+        linesWritten = linesWritten :+ line
+      }
+
+    override def readDouble(msg: String): IO[Option[Double]] = ???
   }
 
 }
