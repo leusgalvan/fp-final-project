@@ -2,9 +2,10 @@ package fpfinal.app
 
 import cats._
 import cats.implicits._
-import fpfinal.app.Configuration.{AppOp, SuccessMsg, readEnv}
-import fpfinal.model.Expense
+import fpfinal.app.Configuration.{AppOp, IsValid, SuccessMsg, readEnv}
+import fpfinal.model.{Expense, Money}
 import Syntax._
+
 import scala.collection.immutable.SortedSet
 
 sealed trait Command {
@@ -18,12 +19,13 @@ object Command {
 
 object AddExpenseCommand extends Command {
   val name = "Add expense"
+
   implicit val ME = MonadError[AppOp, String]
 
   case class AddExpenseData(
       payer: String,
       amount: Double,
-      participants: SortedSet[String]
+      participants: List[String]
   )
 
   def execute(): AppOp[SuccessMsg] = {
@@ -34,15 +36,14 @@ object AddExpenseCommand extends Command {
       } yield name
     }
 
-    def readAmount(): AppOp[Double] = {
+    def readAmount(): AppOp[String] = {
       for {
         env <- readEnv
-        amountStr <- env.console.readDouble("Enter amount: ").toAppOp
-        amount <- ME.fromOption(amountStr, "Invalid amount")
+        amount <- env.console.readLine("Enter amount: ").toAppOp
       } yield amount
     }
 
-    def readParticipants(): AppOp[SortedSet[String]] = {
+    def readParticipants(): AppOp[List[String]] = {
       for {
         env <- readEnv
         p <-
@@ -52,9 +53,17 @@ object AddExpenseCommand extends Command {
             )
             .toAppOp
         ps <-
-          if (p === "END") SortedSet.empty[String].pure[AppOp]
+          if (p === "END") List.empty[String].pure[AppOp]
           else readParticipants()
-      } yield ps + p
+      } yield p :: ps
+    }
+
+    def validateData(
+        payer: String,
+        amount: String,
+        participants: List[String]
+    ): IsValid[AddExpenseData] = {
+      ???
     }
 
     def readData(): AppOp[AddExpenseData] = {
@@ -62,22 +71,19 @@ object AddExpenseCommand extends Command {
         payer <- readPayer()
         amount <- readAmount()
         participants <- readParticipants()
-      } yield AddExpenseData(payer, amount, participants)
+        validData <- validateData(payer, amount, participants).toAppOp
+      } yield validData
     }
 
-    // StateT[Eval, ExpenseState, A] to
-    // ReaderT[
-    //   StateT[Either[String, *], AppState, *],
-    //   ExpenseService with PersonService with Console with Controller,
-    //   A
-    // ]
     for {
       env <- readEnv
-      addExpenseData <- readData()
-      payer = env.personService.findByName(addExpenseData.payer)
-      amount = ???
-      participants = ???
-      expense = Expense.create(payer, amount, participants)
-    } yield "yay"
+      data <- readData()
+      payer <- env.personService.findByName(data.payer).toAppOp
+      amount <- Money.dollars(data.amount).toAppOp
+      participants <-
+        data.participants.traverse(env.personService.findByName).toAppOp
+      expense <- Expense.create(payer, amount, participants).toAppOp
+      _ <- env.expenseService.addExpense(expense).toAppOp
+    } yield "Expense successfully created"
   }
 }
