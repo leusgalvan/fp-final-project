@@ -21,8 +21,6 @@ trait FakeConsole extends Console {
       IO {
         linesWritten = linesWritten :+ line
       }
-
-    override def readDouble(msg: String): IO[Option[Double]] = ???
   }
 
 }

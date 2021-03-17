@@ -11,7 +11,6 @@ trait Console {
   trait Service {
     def readLine(msg: String): IO[String]
     def printLine(line: String): IO[Unit]
-    def readDouble(msg: String): IO[Option[Double]]
   }
 }
 
@@ -22,8 +21,5 @@ trait LiveConsole extends Console {
 
     override def printLine(line: String): IO[Unit] =
       IO(println(line))
-
-    override def readDouble(msg: String): IO[Option[Double]] =
-      readLine(msg).map(line => Try(line.toDouble).toOption)
   }
 }
