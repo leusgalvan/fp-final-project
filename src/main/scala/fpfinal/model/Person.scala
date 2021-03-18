@@ -10,4 +10,6 @@ case class Person private (name: String)
 object Person {
   def create(name: String): IsValid[Person] =
     (allLetters(name), nonEmptyString(name)).mapN((_, _) => Person(name))
+
+  implicit val showPerson: Show[Person] = Show.show(_.name)
 }
