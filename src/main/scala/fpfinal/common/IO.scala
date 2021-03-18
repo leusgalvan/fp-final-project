@@ -1,8 +1,6 @@
-package fpfinal.app
+package fpfinal.common
 
 import cats._
-import cats.implicits._
-import fpfinal.app.Configuration.AppOp
 
 import scala.annotation.tailrec
 

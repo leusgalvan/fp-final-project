@@ -1,8 +1,8 @@
-package fpfinal.app
+package fpfinal.common
 
-import cats.data._
-import cats.implicits._
+import cats.data.{NonEmptyChain, NonEmptyList, Validated}
 import fpfinal.app.Configuration.IsValid
+import cats.implicits._
 
 object Validations {
   def double(s: String): IsValid[Double] =

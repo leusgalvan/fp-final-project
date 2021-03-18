@@ -5,7 +5,7 @@ import cats.implicits._
 import cats.data.Validated.{Invalid, Valid}
 import cats.data._
 import fpfinal.app.Configuration.IsValid
-import fpfinal.app.Validations._
+import fpfinal.common.Validations._
 
 class Expense private (
     val payer: Person,

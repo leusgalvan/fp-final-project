@@ -3,6 +3,7 @@ package fpfinal.app
 import cats.data._
 import cats.implicits._
 import fpfinal.app.Configuration._
+import fpfinal.common.IO
 import fpfinal.service.ExpenseService.ExpenseOp
 import fpfinal.service.PersonService.PersonOp
 

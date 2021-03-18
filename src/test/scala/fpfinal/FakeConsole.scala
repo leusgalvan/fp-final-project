@@ -2,7 +2,8 @@ package fpfinal
 
 import cats._
 import cats.implicits._
-import fpfinal.app.{Console, IO}
+import fpfinal.app.Console
+import fpfinal.common.IO
 
 trait FakeConsole extends Console {
   var linesToRead: List[String]

@@ -1,7 +1,7 @@
 package fpfinal.model
 
 import fpfinal.app.Configuration.IsValid
-import fpfinal.app.Validations._
+import fpfinal.common.Validations._
 
 class Money private (_cents: Int) {
   def cents: Int = _cents

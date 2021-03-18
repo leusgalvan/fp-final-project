@@ -1,7 +1,7 @@
 package fpfinal.model
 
 import fpfinal.app.Configuration.IsValid
-import fpfinal.app.Validations._
+import fpfinal.common.Validations._
 import cats._
 import cats.implicits._
 
