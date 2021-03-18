@@ -9,12 +9,15 @@ trait PersonService {
 
   trait Service {
     def findByName(name: String): PersonOp[Option[Person]]
-    def addPerson()
+    def addPerson(person: Person): PersonOp[Unit]
   }
 }
 
 object PersonService {
-  case class PersonState(personByName: Map[String, Person])
+  case class PersonState(personByName: Map[String, Person]) {
+    def addPerson(person: Person): PersonState =
+      copy(personByName = personByName + (person.name -> person))
+  }
   type PersonOp[A] = State[PersonState, A]
 }
 
@@ -24,6 +27,7 @@ trait LivePersonService extends PersonService {
     override def findByName(name: String): PersonOp[Option[Person]] =
       State.inspect(_.personByName.get(name))
 
-    override def addPerson(): Unit = ???
+    override def addPerson(person: Person): PersonOp[Unit] =
+      State.modify(_.addPerson(person))
   }
 }

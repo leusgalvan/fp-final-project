@@ -16,9 +16,9 @@ trait FakePersonService extends PersonService {
       Option(Person(name)).pure[PersonOp]
     }
 
-    override def addPerson(): Unit = {
+    override def addPerson(person: Person): PersonOp[Unit] = {
       callsToAddPerson += 1
-      ()
+      ().pure[PersonOp]
     }
   }
 }
