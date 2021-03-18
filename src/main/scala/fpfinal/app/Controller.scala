@@ -12,7 +12,8 @@ trait Controller {
 }
 
 trait LiveController extends Controller {
-  val allCommands: Array[Command] = Array(AddExpenseCommand, ExitCommand)
+  val allCommands: Array[Command] =
+    Array(AddExpenseCommand, ExitCommand, AddPersonCommand)
 
   override val controller = new Service {
     override def getCommandByNumber(number: Int): Option[Command] =

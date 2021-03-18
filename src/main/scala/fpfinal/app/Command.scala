@@ -108,6 +108,37 @@ object AddExpenseCommand extends Command {
       }
       expense <- Expense.create(payer, amount, participants).toAppOp
       _ <- env.expenseService.addExpense(expense).toAppOp
-    } yield "Expense successfully created"
+    } yield "Expense created successfully"
+  }
+}
+
+case object AddPersonCommand extends Command {
+  override val name: String = "Add person"
+
+  case class AddPersonData(
+      name: String
+  )
+
+  override def execute(): AppOp[SuccessMsg] = {
+    def validateData(
+        name: String
+    ): IsValid[AddPersonData] = {
+      nonEmptyString(name).map(AddPersonData.apply)
+    }
+
+    def readData(): AppOp[AddPersonData] = {
+      for {
+        env <- readEnv
+        name <- env.console.readLine("Enter name: ").toAppOp
+        validData <- validateData(name).toAppOp
+      } yield validData
+    }
+
+    for {
+      env <- readEnv
+      data <- readData()
+      person <- Person.create(data.name).toAppOp
+      _ <- env.personService.addPerson(person).toAppOp
+    } yield "Person created successfully"
   }
 }
