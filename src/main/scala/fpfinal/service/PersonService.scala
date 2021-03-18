@@ -8,7 +8,7 @@ trait PersonService {
   val personService: Service
 
   trait Service {
-    def findByName(name: String): PersonOp[Person]
+    def findByName(name: String): PersonOp[Option[Person]]
     def addPerson()
   }
 }
@@ -21,7 +21,9 @@ object PersonService {
 trait LivePersonService extends PersonService {
   import PersonService._
   override val personService: Service = new Service {
-    override def findByName(name: String): PersonOp[Person] = ???
+    override def findByName(name: String): PersonOp[Option[Person]] =
+      State.inspect(_.personByName.get(name))
+
     override def addPerson(): Unit = ???
   }
 }

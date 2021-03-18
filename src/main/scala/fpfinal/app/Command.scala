@@ -3,7 +3,7 @@ package fpfinal.app
 import cats._
 import cats.implicits._
 import fpfinal.app.Configuration.{AppOp, IsValid, SuccessMsg, readEnv}
-import fpfinal.model.{Expense, Money}
+import fpfinal.model.{Expense, Money, Person}
 import Syntax._
 import fpfinal.common.Validations._
 
@@ -94,10 +94,18 @@ object AddExpenseCommand extends Command {
     for {
       env <- readEnv
       data <- readData()
-      payer <- env.personService.findByName(data.payer).toAppOp
+      payer <-
+        env.personService
+          .findByName(data.payer)
+          .toAppOp
+          .flatMap(p => ME.fromOption(p, s"Payer not found: ${data.payer}"))
       amount <- Money.dollars(data.amount).toAppOp
-      participants <-
-        data.participants.traverse(env.personService.findByName).toAppOp
+      participants <- data.participants.traverse { p =>
+        env.personService
+          .findByName(p)
+          .toAppOp
+          .flatMap(p => ME.fromOption(p, s"Payer not found: ${p}"))
+      }
       expense <- Expense.create(payer, amount, participants).toAppOp
       _ <- env.expenseService.addExpense(expense).toAppOp
     } yield "Expense successfully created"
