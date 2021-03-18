@@ -7,7 +7,7 @@ import fpfinal.common.Validations._
 
 class Money private (_cents: Int) {
   def cents: Int = _cents
-  def dollars: Int = _cents / 100
+  def dollars: Double = _cents / 100
   def plus(other: Money): Money = new Money(_cents + other.cents)
   def divideBy(n: Int) = new Money(_cents / n)
 }
@@ -22,4 +22,6 @@ object Money {
     }
 
   implicit val monoidMoney: Monoid[Money] = Monoid.instance(zero, _ plus _)
+
+  implicit val showMoney: Show[Money] = Show.show(m => f"$$${m.dollars}%.2f")
 }

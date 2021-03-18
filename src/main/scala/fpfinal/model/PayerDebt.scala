@@ -23,7 +23,9 @@ object PayerDebt {
        |
        |${pd
       .allPayers()
-      .foldMap(payer => s"${payer.show}:\n" + pd.debtForPayer(payer).show)}
+      .foldMap(payer =>
+        s"${payer.show}:\n" + pd.debtForPayer(payer).foldMap(_.show)
+      )}
        |""".stripMargin
   }
 }

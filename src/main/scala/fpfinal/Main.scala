@@ -12,5 +12,7 @@ object Main {
       .run()
       .run(liveEnv)
       .runA(AppState(ExpenseState(Nil), PersonState(Map.empty[String, Person])))
+      .value
+      .run
   }
 }

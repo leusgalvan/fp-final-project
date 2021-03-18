@@ -20,7 +20,7 @@ object Command {
 }
 
 object ExitCommand extends Command {
-  override val name: String = "Exit command"
+  override val name: String = "Exit app"
 
   override def isExit: Boolean = true
 

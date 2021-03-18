@@ -20,6 +20,9 @@ object PayeeDebt {
     Monoid[Map[Person, Money]].imap(PayeeDebt.apply)(_.debtByPayee)
 
   implicit val showPayeeDebt: Show[PayeeDebt] = Show.show { pd =>
-    pd.allPayees().foldMap(payee => s"- $payee: ${pd.debtForPayee(payee)}\n")
+    pd.allPayees()
+      .foldMap(payee =>
+        s"- ${payee.show}: ${pd.debtForPayee(payee).getOrElse(Money.zero).show}\n"
+      )
   }
 }
