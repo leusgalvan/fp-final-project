@@ -142,3 +142,15 @@ case object AddPersonCommand extends Command {
     } yield "Person created successfully"
   }
 }
+
+case object ComputeDebtCommand extends Command {
+  override val name: String = "Compute debt"
+
+  override def execute(): AppOp[SuccessMsg] = {
+    for {
+      env <- readEnv
+      payerDebt <- env.expenseService.computeDebt().toAppOp
+      _ <- env.console.printLine(payerDebt.show).toAppOp
+    } yield "Person created successfully"
+  }
+}

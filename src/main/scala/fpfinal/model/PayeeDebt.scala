@@ -5,6 +5,7 @@ import cats.implicits._
 
 case class PayeeDebt private (debtByPayee: Map[Person, Money]) {
   def debtForPayee(person: Person): Option[Money] = debtByPayee.get(person)
+  def allPayees(): List[Person] = debtByPayee.keySet.toList
 }
 
 object PayeeDebt {
@@ -17,4 +18,8 @@ object PayeeDebt {
 
   implicit val monoidPayeeDebt: Monoid[PayeeDebt] =
     Monoid[Map[Person, Money]].imap(PayeeDebt.apply)(_.debtByPayee)
+
+  implicit val showPayeeDebt: Show[PayeeDebt] = Show.show { pd =>
+    pd.allPayees().foldMap(payee => s"- $payee: ${pd.debtForPayee(payee)}\n")
+  }
 }
