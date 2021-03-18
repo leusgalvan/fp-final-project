@@ -1,7 +1,9 @@
 package fpfinal.service
 
 import cats.data._
-import fpfinal.model.Expense
+import cats._
+import cats.implicits._
+import fpfinal.model.{Expense, PayerDebt}
 
 trait ExpenseService {
   import ExpenseService._
@@ -10,6 +12,7 @@ trait ExpenseService {
 
   trait Service {
     def addExpense(expense: Expense): ExpenseOp[Expense]
+    def computeDebt(): ExpenseOp[PayerDebt]
   }
 }
 
@@ -31,5 +34,8 @@ trait LiveExpenseService extends ExpenseService {
     ): ExpenseOp[Expense] = {
       State(s => (s.addExpense(expense), expense))
     }
+
+    override def computeDebt(): ExpenseOp[PayerDebt] =
+      State.inspect(_.expenses.foldMap(PayerDebt.fromExpense))
   }
 }
