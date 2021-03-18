@@ -154,3 +154,20 @@ case object ComputeDebtCommand extends Command {
     } yield "Person created successfully"
   }
 }
+
+case object ListAllPeopleCommand extends Command {
+  override val name: String = "List all people"
+
+  override def execute(): AppOp[SuccessMsg] = {
+    for {
+      env <- readEnv
+      people <- env.personService.getAllPeople().toAppOp
+      _ <-
+        env.console
+          .printLine(
+            s"List of people:\n\n${people.foldMap(p => s"${p.show}\n")}"
+          )
+          .toAppOp
+    } yield "All people listed!"
+  }
+}

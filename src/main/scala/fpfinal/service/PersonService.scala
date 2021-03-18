@@ -10,6 +10,7 @@ trait PersonService {
   trait Service {
     def findByName(name: String): PersonOp[Option[Person]]
     def addPerson(person: Person): PersonOp[Unit]
+    def getAllPeople(): PersonOp[List[Person]]
   }
 }
 
@@ -29,5 +30,8 @@ trait LivePersonService extends PersonService {
 
     override def addPerson(person: Person): PersonOp[Unit] =
       State.modify(_.addPerson(person))
+
+    override def getAllPeople(): PersonOp[List[Person]] =
+      State.inspect(_.personByName.values.toList)
   }
 }

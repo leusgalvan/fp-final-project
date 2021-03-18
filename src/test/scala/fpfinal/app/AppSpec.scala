@@ -13,16 +13,15 @@ class AppSpec extends AnyFunSuite with Matchers {
       override val commands: Map[Int, Command] =
         Map(0 -> AddPersonCommand, 1 -> AddExpenseCommand, 2 -> ExitCommand)
       override var linesToRead: List[String] = List(
-//        "0", // The command number (add expense)
-//        "Leandro", // The name of the person
-//        "1", // The command number (add expense)
-//        "Leandro", // The payer
-//        "2000.00", // The amount
-//        "Martin", // The first participant
-//        "Susan", // The second participant
-//        "END", // No more participants
-//        "2" // The command number (exit)
-        "4" // The command number (exit)
+        "0", // The command number (add expense)
+        "Leandro", // The name of the person
+        "1", // The command number (add expense)
+        "Leandro", // The payer
+        "2000.00", // The amount
+        "Martin", // The first participant
+        "Susan", // The second participant
+        "END", // No more participants
+        "2" // The command number (exit)
       )
     }
 

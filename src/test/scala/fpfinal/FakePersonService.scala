@@ -2,6 +2,7 @@ package fpfinal
 
 import cats._
 import cats.implicits._
+import fpfinal.app.Configuration.AppOp
 import fpfinal.model.Person
 import fpfinal.service.PersonService
 import fpfinal.service.PersonService.PersonOp
@@ -20,5 +21,8 @@ trait FakePersonService extends PersonService {
       callsToAddPerson += 1
       ().pure[PersonOp]
     }
+
+    override def getAllPeople(): PersonOp[List[Person]] =
+      List.empty[Person].pure[PersonOp]
   }
 }

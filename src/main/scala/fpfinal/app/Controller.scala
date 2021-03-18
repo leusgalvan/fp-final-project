@@ -13,7 +13,13 @@ trait Controller {
 
 trait LiveController extends Controller {
   val allCommands: Array[Command] =
-    Array(AddExpenseCommand, AddPersonCommand, ComputeDebtCommand, ExitCommand)
+    Array(
+      AddExpenseCommand,
+      AddPersonCommand,
+      ComputeDebtCommand,
+      ListAllPeopleCommand,
+      ExitCommand
+    )
 
   override val controller = new Service {
     override def getCommandByNumber(number: Int): Option[Command] =
