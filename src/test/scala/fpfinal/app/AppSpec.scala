@@ -1,17 +1,36 @@
 package fpfinal.app
 
 import fpfinal.FakeEnv
-import fpfinal.app.Configuration.liveEnv
+import fpfinal.app.Configuration.{AppState, liveEnv}
+import fpfinal.service.ExpenseService.ExpenseState
+import fpfinal.service.PersonService.PersonState
 import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.matchers.should.Matchers
 
-class AppSpec extends AnyFunSuite {
+class AppSpec extends AnyFunSuite with Matchers {
   test("Successful command flow") {
     val fakeEnv: FakeEnv = new FakeEnv {
-      override val commands: Map[Int, Command] = Map(1 -> AddExpenseCommand)
-      override var linesToRead: List[String] = List("1")
+      override val commands: Map[Int, Command] =
+        Map(1 -> AddExpenseCommand, 2 -> ExitCommand)
+      override var linesToRead: List[String] = List(
+        "1", // The command number (add expense)
+        "Leandro", // The payer
+        "2000.00", // The amount
+        "Martin", // The first participant
+        "Susan", // The second participant
+        "END", // No more participants
+        "2" // The command number (exit)
+      )
     }
-    App.run().run(liveEnv)
-    println(fakeEnv.callsToAddExpense)
-    println(fakeEnv.linesWritten)
+
+    App
+      .run()
+      .run(fakeEnv)
+      .run(AppState(ExpenseState(Nil), PersonState(Map.empty)))
+      .value
+      .run
+
+    fakeEnv.peopleSearched shouldBe 3
+    fakeEnv.callsToAddExpense shouldBe 1
   }
 }

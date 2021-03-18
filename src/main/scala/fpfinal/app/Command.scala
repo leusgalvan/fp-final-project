@@ -12,10 +12,19 @@ import scala.collection.immutable.SortedSet
 sealed trait Command {
   val name: String
   def execute(): AppOp[SuccessMsg]
+  def isExit: Boolean = false
 }
 
 object Command {
   implicit val showCommand: Show[Command] = Show.show(_.name)
+}
+
+object ExitCommand extends Command {
+  override val name: String = "Exit command"
+
+  override def isExit: Boolean = true
+
+  override def execute(): AppOp[SuccessMsg] = "Bye :)".pure[AppOp]
 }
 
 object AddExpenseCommand extends Command {
@@ -56,7 +65,7 @@ object AddExpenseCommand extends Command {
         ps <-
           if (p === "END") List.empty[String].pure[AppOp]
           else readParticipants()
-      } yield p :: ps
+      } yield if (p === "END") ps else (p :: ps)
     }
 
     def validateData(

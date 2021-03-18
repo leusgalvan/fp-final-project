@@ -46,7 +46,7 @@ object App {
           ME.raiseError[SuccessMsg]("Command not found")
         )(_.execute())
         _ <- env.console.printLine(successMsg).toAppOp
-        _ <- loop
+        _ <- if (command.exists(_.isExit)) ME.unit else loop
       } yield ()
 
     ME.handleErrorWith(loop) { errorMessage =>

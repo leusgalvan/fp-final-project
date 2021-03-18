@@ -1,3 +1,7 @@
 package fpfinal
 
-trait FakeEnv extends FakeConsole with FakeController with FakeExpenseService
+trait FakeEnv
+    extends FakeExpenseService
+    with FakePersonService
+    with FakeConsole
+    with FakeController
