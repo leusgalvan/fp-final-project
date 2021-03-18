@@ -13,6 +13,7 @@ class Expense private (
     val participants: NonEmptyList[Person],
     val isComputed: Boolean
 ) {
+  def amountByParticipant: Money = amount.divideBy(participants.length + 1)
   def computed: Expense = new Expense(payer, amount, participants, true)
 }
 
