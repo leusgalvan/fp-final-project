@@ -16,6 +16,13 @@ object DebtByPayee {
         .combineAll
     })
 
+  implicit def eqDebtByPayee(implicit
+      eqM: Eq[Map[Person, Money]]
+  ): Eq[DebtByPayee] =
+    Eq.instance { (d1, d2) =>
+      d1.debtByPayee eqv d2.debtByPayee
+    }
+
   implicit val monoidDebtByPayee: Monoid[DebtByPayee] =
     Monoid[Map[Person, Money]].imap(x => new DebtByPayee(x))(_.debtByPayee)
 
