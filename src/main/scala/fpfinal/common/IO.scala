@@ -43,6 +43,13 @@ object IO {
 
     override def flatMap[A, B](fa: IO[A])(f: A => IO[B]): IO[B] = FlatMap(fa, f)
 
-    override def tailRecM[A, B](a: A)(f: A => IO[Either[A, B]]) = ???
+    override def tailRecM[A, B](a: A)(f: A => IO[Either[A, B]]): IO[B] = {
+      val g: Either[A, B] => IO[B] = {
+        case Right(b) => pure(b)
+        case Left(a)  => tailRecM(a)(f)
+      }
+
+      FlatMap(f(a), g)
+    }
   }
 }
