@@ -32,4 +32,9 @@ trait Generators {
       .listOf(expenseArb.arbitrary)
       .map(_.map(PayerDebt.fromExpense).combineAll)
   }
+
+  implicit def functionArb[A](implicit arbA: Arbitrary[A]): Arbitrary[A => A] =
+    Arbitrary {
+      arbA.arbitrary.map(a => (_: A) => a)
+    }
 }
