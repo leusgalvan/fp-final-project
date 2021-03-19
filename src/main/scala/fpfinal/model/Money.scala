@@ -13,6 +13,8 @@ class Money private (_cents: Int) {
 }
 
 object Money {
+  def unsafeCreate(cents: Int): Money = new Money(cents)
+
   val zero: Money = new Money(0)
 
   def dollars(amount: Double): IsValid[Money] =
@@ -24,4 +26,7 @@ object Money {
   implicit val monoidMoney: Monoid[Money] = Monoid.instance(zero, _ plus _)
 
   implicit val showMoney: Show[Money] = Show.show(m => f"$$${m.dollars}%.2f")
+
+  implicit def eqMoney(implicit eqInt: Eq[Int]): Eq[Money] =
+    Eq.instance((m1, m2) => m1.cents === m2.cents)
 }

@@ -14,7 +14,7 @@ trait FakePersonService extends PersonService {
   override val personService: Service = new Service {
     override def findByName(name: String): PersonOp[Option[Person]] = {
       peopleSearched += 1
-      Option(Person(name)).pure[PersonOp]
+      Option(Person.unsafeCreate(name)).pure[PersonOp]
     }
 
     override def addPerson(person: Person): PersonOp[Unit] = {
