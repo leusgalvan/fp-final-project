@@ -1,6 +1,6 @@
 package fpfinal.model
 
-import cats.data.Validated.Valid
+import cats.data.Validated.{Invalid, Valid}
 import cats.implicits._
 import fpfinal.Generators
 import org.scalacheck.Prop.forAll
@@ -23,6 +23,18 @@ class ExpenseSpec extends AnyFunSuite with Matchers with Generators {
       Expense.create(p._1, money, p._2) === Valid(
         Expense.unsafeCreate(p._1, money, p._2)
       )
+    }
+  }
+
+  test("create an invalid expense with no participants") {
+    forAll { (money: Money, payer: Person) =>
+      Expense.create(payer, money, List.empty[Person]).isInvalid
+    }
+  }
+
+  test("create an invalid expense with payer included in participants") {
+    forAll { (money: Money, payer: Person, participants: List[Person]) =>
+      Expense.create(payer, money, payer :: participants).isInvalid
     }
   }
 }
