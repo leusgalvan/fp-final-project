@@ -9,7 +9,9 @@ class Money private (_cents: Int) {
   def cents: Int = _cents
   def dollars: Double = _cents / 100
   def plus(other: Money): Money = new Money(_cents + other.cents)
-  def divideBy(n: Int) = new Money(_cents / n)
+  def divideBy(n: Int): Option[Money] = {
+    Option(new Money(_cents / n)).ensuring(n > 0)
+  }
 }
 
 object Money {

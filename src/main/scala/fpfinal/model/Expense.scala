@@ -12,7 +12,10 @@ class Expense private (
     val amount: Money,
     val participants: NonEmptyList[Person]
 ) {
-  def amountByParticipant: Money = amount.divideBy(participants.length + 1)
+  def amountByParticipant: Money =
+    amount
+      .divideBy(participants.length + 1)
+      .get // safe get because divisor is never 0
 }
 
 object Expense {
