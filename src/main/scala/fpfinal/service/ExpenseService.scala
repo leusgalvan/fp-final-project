@@ -24,6 +24,12 @@ object ExpenseService {
     def addExpense(expense: Expense): ExpenseState =
       copy(expenses = expense :: expenses)
   }
+  object ExpenseState {
+    implicit def eqExpenseState(implicit
+        eqExpense: Eq[Expense]
+    ): Eq[ExpenseState] =
+      Eq.instance((es1, es2) => es1.expenses === es2.expenses)
+  }
 }
 
 trait LiveExpenseService extends ExpenseService {

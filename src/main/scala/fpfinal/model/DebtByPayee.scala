@@ -9,6 +9,9 @@ class DebtByPayee private (val debtByPayee: Map[Person, Money]) {
 }
 
 object DebtByPayee {
+  def unsafeCreate(debtByPayee: Map[Person, Money]): DebtByPayee =
+    new DebtByPayee(debtByPayee)
+
   def fromExpense(expense: Expense): DebtByPayee =
     new DebtByPayee({
       expense.participants

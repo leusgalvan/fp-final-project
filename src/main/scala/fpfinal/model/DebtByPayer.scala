@@ -3,15 +3,18 @@ package fpfinal.model
 import cats._
 import cats.implicits._
 
-case class DebtByPayer private (debtByPerson: Map[Person, DebtByPayee]) {
+class DebtByPayer private (val debtByPerson: Map[Person, DebtByPayee]) {
   def debtForPayer(person: Person): Option[DebtByPayee] =
     debtByPerson.get(person)
   def allPayers(): List[Person] = debtByPerson.keySet.toList
 }
 
 object DebtByPayer {
+  def unsafeCreate(debtByPerson: Map[Person, DebtByPayee]): DebtByPayer =
+    new DebtByPayer(debtByPerson)
+
   def fromExpense(expense: Expense): DebtByPayer =
-    DebtByPayer(Map(expense.payer -> DebtByPayee.fromExpense(expense)))
+    new DebtByPayer(Map(expense.payer -> DebtByPayee.fromExpense(expense)))
 
   implicit def eqDebtByPayer(implicit
       eqMap: Eq[Map[Person, DebtByPayee]]
@@ -21,7 +24,7 @@ object DebtByPayer {
   implicit def monoidDebtByPayer(implicit
       monoidMap: Monoid[Map[Person, DebtByPayee]]
   ): Monoid[DebtByPayer] =
-    monoidMap.imap(DebtByPayer.apply)(_.debtByPerson)
+    monoidMap.imap(DebtByPayer.unsafeCreate)(_.debtByPerson)
 
   implicit val showDebtByPayer: Show[DebtByPayer] = Show.show { pd =>
     s"""
