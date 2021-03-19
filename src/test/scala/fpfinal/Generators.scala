@@ -1,7 +1,7 @@
 package fpfinal
 
 import cats.implicits._
-import fpfinal.model.{Expense, Money, PayeeDebt, PayerDebt, Person}
+import fpfinal.model.{Expense, Money, DebtByPayee, DebtByPayer, Person}
 import org.scalacheck.{Arbitrary, Gen}
 
 trait Generators {
@@ -21,16 +21,16 @@ trait Generators {
     } yield Expense.unsafeCreate(person, money, participants)
   }
 
-  implicit val payeeDebtArb: Arbitrary[PayeeDebt] = Arbitrary {
+  implicit val payeeDebtArb: Arbitrary[DebtByPayee] = Arbitrary {
     Gen
       .listOf(expenseArb.arbitrary)
-      .map(_.map(PayeeDebt.fromExpense).combineAll)
+      .map(_.map(DebtByPayee.fromExpense).combineAll)
   }
 
-  implicit val payerDebtArb: Arbitrary[PayerDebt] = Arbitrary {
+  implicit val payerDebtArb: Arbitrary[DebtByPayer] = Arbitrary {
     Gen
       .listOf(expenseArb.arbitrary)
-      .map(_.map(PayerDebt.fromExpense).combineAll)
+      .map(_.map(DebtByPayer.fromExpense).combineAll)
   }
 
   implicit def functionArb[A](implicit arbA: Arbitrary[A]): Arbitrary[A => A] =

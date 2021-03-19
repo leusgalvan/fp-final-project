@@ -2,7 +2,7 @@ package fpfinal
 
 import cats.implicits._
 import cats._
-import fpfinal.model.{Expense, PayerDebt}
+import fpfinal.model.{Expense, DebtByPayer}
 import fpfinal.service.ExpenseService
 import fpfinal.service.ExpenseService.ExpenseOp
 
@@ -17,9 +17,9 @@ trait FakeExpenseService extends ExpenseService {
       expense.pure[ExpenseOp]
     }
 
-    override def computeDebt(): ExpenseOp[PayerDebt] = {
+    override def computeDebt(): ExpenseOp[DebtByPayer] = {
       callsToComputeDebt += 1
-      Monoid[PayerDebt].empty.pure[ExpenseOp]
+      Monoid[DebtByPayer].empty.pure[ExpenseOp]
     }
   }
 
