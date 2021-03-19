@@ -13,8 +13,15 @@ object DebtByPayer {
   def fromExpense(expense: Expense): DebtByPayer =
     DebtByPayer(Map(expense.payer -> DebtByPayee.fromExpense(expense)))
 
-  implicit val monoidDebtByPayer: Monoid[DebtByPayer] =
-    Monoid[Map[Person, DebtByPayee]].imap(DebtByPayer.apply)(_.debtByPerson)
+  implicit def eqDebtByPayer(implicit
+      eqMap: Eq[Map[Person, DebtByPayee]]
+  ): Eq[DebtByPayer] =
+    Eq.instance((d1, d2) => d1.debtByPerson === d2.debtByPerson)
+
+  implicit def monoidDebtByPayer(implicit
+      monoidMap: Monoid[Map[Person, DebtByPayee]]
+  ): Monoid[DebtByPayer] =
+    monoidMap.imap(DebtByPayer.apply)(_.debtByPerson)
 
   implicit val showDebtByPayer: Show[DebtByPayer] = Show.show { pd =>
     s"""
