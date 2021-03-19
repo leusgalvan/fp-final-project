@@ -1,7 +1,8 @@
 package fpfinal
 
 import cats.implicits._
-import fpfinal.model.{Expense, Money, DebtByPayee, DebtByPayer, Person}
+import fpfinal.model.{DebtByPayee, DebtByPayer, Expense, Money, Person}
+import fpfinal.service.PersonService.PersonState
 import org.scalacheck.{Arbitrary, Gen}
 
 trait Generators {
@@ -37,4 +38,10 @@ trait Generators {
     Arbitrary {
       arbA.arbitrary.map(a => (_: A) => a)
     }
+
+  implicit val personStateArb: Arbitrary[PersonState] = Arbitrary {
+    Gen
+      .mapOf[String, Person](personArb.arbitrary.map(p => (p.name, p)))
+      .map(PersonState.apply)
+  }
 }

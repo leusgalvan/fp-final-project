@@ -1,6 +1,8 @@
 package fpfinal.service
 
-import cats.data.State
+import cats._
+import cats.implicits._
+import cats.data._
 import fpfinal.model.Person
 
 trait PersonService {
@@ -19,6 +21,14 @@ object PersonService {
     def addPerson(person: Person): PersonState =
       copy(personByName = personByName + (person.name -> person))
   }
+
+  object PersonState {
+    implicit def eqPersonState(implicit
+        eqMap: Eq[Map[String, Person]]
+    ): Eq[PersonState] =
+      Eq.instance((ps1, ps2) => ps1.personByName eqv ps2.personByName)
+  }
+
   type PersonOp[A] = State[PersonState, A]
 }
 

@@ -10,7 +10,7 @@ import org.scalacheck.Prop.forAll
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
 
-class ExpenseServiceSpec extends AnyFunSuite with Matchers with Generators {
+class ExpenseServiceSpec extends ServiceSpec {
   val service: LiveExpenseService#Service =
     new LiveExpenseService {}.expenseService
 
