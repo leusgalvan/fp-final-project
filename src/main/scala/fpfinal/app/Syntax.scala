@@ -43,4 +43,18 @@ object Syntax {
       }
     def toAppOp: AppOp[A] = ReaderT.liftF(fa.toSt)
   }
+
+  implicit class AppOps[A](fa: AppOp[A]) {
+    def unsafeRunApp(
+        environment: Environment,
+        initialState: AppState
+    ): Either[Error, (AppState, A)] =
+      fa.run(environment).run(initialState).value.run
+
+    def unsafeRunAppS(
+        environment: Environment,
+        initialState: AppState
+    ): Either[Error, AppState] =
+      unsafeRunApp(environment, initialState).map(_._1)
+  }
 }

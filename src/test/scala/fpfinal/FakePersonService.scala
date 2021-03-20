@@ -8,7 +8,7 @@ import fpfinal.service.PersonService
 import fpfinal.service.PersonService.PersonOp
 
 trait FakePersonService extends PersonService {
-  var callsToAddPerson = 0
+  var peopleAdded = List[Person]()
   var peopleSearched = 0
 
   override val personService: Service = new Service {
@@ -18,7 +18,7 @@ trait FakePersonService extends PersonService {
     }
 
     override def addPerson(person: Person): PersonOp[Unit] = {
-      callsToAddPerson += 1
+      peopleAdded = person :: peopleAdded
       ().pure[PersonOp]
     }
 

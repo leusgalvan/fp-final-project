@@ -16,6 +16,8 @@ class Expense private (
     amount
       .divideBy(participants.length + 1)
       .get // safe get because divisor is never 0
+  override def toString: String =
+    s"Expense(${payer.show}, ${amount.show}, ${participants.show}"
 }
 
 object Expense {

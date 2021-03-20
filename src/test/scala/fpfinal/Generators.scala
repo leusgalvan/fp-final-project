@@ -1,15 +1,17 @@
 package fpfinal
 
 import cats.implicits._
+import fpfinal.app.Configuration.AppState
 import fpfinal.common.IO
 import fpfinal.common.IO.{Done, FlatMap, More}
 import fpfinal.model.{DebtByPayee, DebtByPayer, Expense, Money, Person}
+import fpfinal.service.ExpenseService.ExpenseState
 import fpfinal.service.PersonService.PersonState
 import org.scalacheck.{Arbitrary, Gen}
 
 trait Generators {
   implicit val personArb: Arbitrary[Person] = Arbitrary {
-    Gen.alphaStr.map(Person.unsafeCreate)
+    Gen.alphaStr.suchThat(_.nonEmpty).map(Person.unsafeCreate)
   }
 
   implicit val moneyArb: Arbitrary[Money] = Arbitrary {
@@ -41,11 +43,14 @@ trait Generators {
       arbA.arbitrary.map(a => (_: A) => a)
     }
 
-  implicit val personStateArb: Arbitrary[PersonState] = Arbitrary {
-    Gen
-      .mapOf[String, Person](personArb.arbitrary.map(p => (p.name, p)))
-      .map(PersonState.apply)
-  }
+  implicit def personStateArb(implicit
+      personArb: Arbitrary[Person]
+  ): Arbitrary[PersonState] =
+    Arbitrary {
+      Gen
+        .mapOf[String, Person](personArb.arbitrary.map(p => (p.name, p)))
+        .map(PersonState.apply)
+    }
 
   implicit def ioArb[A](implicit arbA: Arbitrary[A]): Arbitrary[IO[A]] = {
     val doneGen: Gen[Done[A]] = arbA.arbitrary.map(Done.apply)
@@ -58,4 +63,22 @@ trait Generators {
 
     Arbitrary(Gen.oneOf(doneGen, moreGen, flatMapGen))
   }
+
+  implicit def expenseStateArb(implicit
+      expenseArb: Arbitrary[Expense]
+  ): Arbitrary[ExpenseState] =
+    Arbitrary {
+      Gen.listOf(expenseArb.arbitrary).map(ExpenseState.apply)
+    }
+
+  implicit def appStateArb(implicit
+      arbPersonState: Arbitrary[PersonState],
+      arbExpenseState: Arbitrary[ExpenseState]
+  ): Arbitrary[AppState] =
+    Arbitrary {
+      for {
+        ps <- arbPersonState.arbitrary
+        es <- arbExpenseState.arbitrary
+      } yield AppState(es, ps)
+    }
 }

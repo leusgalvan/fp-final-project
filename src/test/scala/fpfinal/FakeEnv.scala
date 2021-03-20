@@ -1,7 +1,10 @@
 package fpfinal
 
+import fpfinal.app.LiveController
+import fpfinal.service.{LiveExpenseService, LivePersonService}
+
 trait FakeEnv
-    extends FakeExpenseService
-    with FakePersonService
+    extends LiveExpenseService
+    with LivePersonService
     with FakeConsole
-    with FakeController
+    with LiveController

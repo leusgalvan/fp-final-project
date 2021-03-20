@@ -4,8 +4,11 @@ import fpfinal.app.Configuration.IsValid
 import fpfinal.common.Validations._
 import cats._
 import cats.implicits._
+import fpfinal.model.Person.showPerson
 
-class Person private (val name: String)
+class Person private (val name: String) {
+  override def toString: String = showPerson.show(this)
+}
 
 object Person {
   def unsafeCreate(name: String): Person = new Person(name)

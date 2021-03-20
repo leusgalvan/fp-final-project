@@ -10,8 +10,6 @@ import org.scalatest.matchers.should.Matchers
 class AppSpec extends AnyFunSuite with Matchers {
   test("Successful command flow") {
     val fakeEnv: FakeEnv = new FakeEnv {
-      override val commands: Map[Int, Command] =
-        Map(0 -> AddPersonCommand, 1 -> AddExpenseCommand, 2 -> ExitCommand)
       override var linesToRead: List[String] = List(
         "0", // The command number (add expense)
         "Leandro", // The name of the person
@@ -35,7 +33,5 @@ class AppSpec extends AnyFunSuite with Matchers {
     println(x)
 
     println(fakeEnv.linesWritten.mkString("\n"))
-    fakeEnv.peopleSearched shouldBe 3
-    fakeEnv.callsToAddExpense shouldBe 1
   }
 }
