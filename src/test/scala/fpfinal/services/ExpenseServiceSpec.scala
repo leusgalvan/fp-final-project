@@ -2,7 +2,7 @@ package fpfinal.services
 
 import cats._
 import cats.implicits._
-import fpfinal.Generators
+import fpfinal.{FpFinalSpec, Generators}
 import fpfinal.model.{DebtByPayee, DebtByPayer, Expense, Money, Person}
 import fpfinal.service.ExpenseService.ExpenseState
 import fpfinal.service.{ExpenseService, LiveExpenseService}
@@ -10,16 +10,18 @@ import org.scalacheck.Prop.forAll
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
 
-class ExpenseServiceSpec extends ServiceSpec {
+class ExpenseServiceSpec extends FpFinalSpec {
   val service: LiveExpenseService#Service =
     new LiveExpenseService {}.expenseService
 
   test("add expense adds the expense to the state") {
     forAll { (expense: Expense, currentExpenses: List[Expense]) =>
-      service
-        .addExpense(expense)
-        .run(ExpenseState(currentExpenses))
-        .value eqv (ExpenseState(expense :: currentExpenses), expense)
+      assert(
+        service
+          .addExpense(expense)
+          .run(ExpenseState(currentExpenses))
+          .value eqv (ExpenseState(expense :: currentExpenses), expense)
+      )
     }
   }
 
@@ -27,7 +29,7 @@ class ExpenseServiceSpec extends ServiceSpec {
     val initialState = ExpenseState(Nil)
     val expectedDebt = Monoid[DebtByPayer].empty
     val result = service.computeDebt().run(initialState).value
-    (result eqv (initialState, expectedDebt)) shouldBe true
+    assert(result eqv (initialState, expectedDebt))
   }
 
   test("computeDebt for some expenses") {
@@ -63,6 +65,6 @@ class ExpenseServiceSpec extends ServiceSpec {
     )
 
     val result = service.computeDebt().run(initialState).value
-    (result eqv (initialState, expectedDebt)) shouldBe true
+    assert(result eqv (initialState, expectedDebt))
   }
 }

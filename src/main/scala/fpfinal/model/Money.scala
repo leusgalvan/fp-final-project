@@ -4,14 +4,17 @@ import cats._
 import cats.implicits._
 import fpfinal.app.Configuration.IsValid
 import fpfinal.common.Validations._
+import fpfinal.model.Money.showMoney
+
+import scala.util.Try
 
 class Money private (_cents: Int) {
   def cents: Int = _cents
-  def dollars: Double = _cents / 100
+  def dollars: Double = _cents / 100.0
   def plus(other: Money): Money = new Money(_cents + other.cents)
-  def divideBy(n: Int): Option[Money] = {
-    Option(new Money(_cents / n)).ensuring(n > 0)
-  }
+  def divideBy(n: Int): Option[Money] = Try(new Money(_cents / n)).toOption
+
+  override def toString: String = showMoney.show(this)
 }
 
 object Money {

@@ -13,7 +13,7 @@ trait Generators {
   }
 
   implicit val moneyArb: Arbitrary[Money] = Arbitrary {
-    Gen.choose(1, Int.MaxValue).map(Money.unsafeCreate)
+    Gen.choose(1, 1e9.toInt).map(Money.unsafeCreate)
   }
 
   implicit val expenseArb: Arbitrary[Expense] = Arbitrary {
