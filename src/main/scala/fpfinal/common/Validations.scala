@@ -8,8 +8,8 @@ object Validations {
   def double(s: String): IsValid[Double] =
     Validated.fromOption(s.toDoubleOption, NonEmptyChain("Invalid double"))
 
-  def positive(x: Double): IsValid[Double] =
-    Validated.condNec(x > 0, x, s"$x should be positive")
+  def nonNegative(x: Double): IsValid[Double] =
+    Validated.condNec(x >= 0, x, s"$x should be nonnegative")
 
   def nonEmptyList[A](list: List[A]): IsValid[NonEmptyList[A]] =
     Validated.fromOption(list.toNel, NonEmptyChain("List should be non-empty"))

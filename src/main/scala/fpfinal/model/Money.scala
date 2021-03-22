@@ -23,7 +23,7 @@ object Money {
   val zero: Money = new Money(0)
 
   def dollars(amount: Double): IsValid[Money] =
-    positive(amount).map { dls =>
+    nonNegative(amount).map { dls =>
       val cents = (dls * 100).toInt
       new Money(cents)
     }
