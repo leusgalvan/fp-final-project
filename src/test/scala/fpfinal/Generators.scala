@@ -1,12 +1,15 @@
 package fpfinal
 
+import cats.data.{NonEmptyChain, State}
+import cats.data.Validated.Valid
 import cats.implicits._
 import fpfinal.app.AppState
+import fpfinal.app.Configuration.IsValid
 import fpfinal.common.IO
 import fpfinal.common.IO.{Done, FlatMap, More}
 import fpfinal.model.{DebtByPayee, DebtByPayer, Expense, Money, Person}
-import fpfinal.service.ExpenseService.ExpenseState
-import fpfinal.service.PersonService.PersonState
+import fpfinal.service.ExpenseService.{ExpenseOp, ExpenseState}
+import fpfinal.service.PersonService.{PersonOp, PersonState}
 import org.scalacheck.{Arbitrary, Gen}
 
 trait Generators {
@@ -80,5 +83,36 @@ trait Generators {
         ps <- arbPersonState.arbitrary
         es <- arbExpenseState.arbitrary
       } yield AppState(es, ps)
+    }
+
+  implicit def personOpArb[A](implicit
+      arbA: Arbitrary[A],
+      arbPersonState: Arbitrary[PersonState]
+  ): Arbitrary[PersonOp[A]] = {
+    Arbitrary(for {
+      a <- arbA.arbitrary
+      ps <- arbPersonState.arbitrary
+    } yield State((_: PersonState) => (ps, a)))
+  }
+
+  implicit def isValidArb[A](implicit
+      arbA: Arbitrary[A]
+  ): Arbitrary[IsValid[A]] = {
+    val validGen: Gen[IsValid[A]] = arbA.arbitrary.map(_.validNec[String])
+    val invalidGen: Gen[IsValid[A]] = Gen
+      .nonEmptyListOf(Arbitrary.arbitrary[String])
+      .map(xs => NonEmptyChain.fromSeq(xs).get.invalid[A])
+    Arbitrary(Gen.oneOf(validGen, invalidGen))
+  }
+
+  implicit def expenseOpGen[A](implicit
+      arbA: Arbitrary[A],
+      expenseStateArb: Arbitrary[ExpenseState]
+  ): Arbitrary[ExpenseOp[A]] =
+    Arbitrary {
+      for {
+        a <- arbA.arbitrary
+        es <- expenseStateArb.arbitrary
+      } yield State((_: ExpenseState) => (es, a))
     }
 }

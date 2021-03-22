@@ -9,39 +9,48 @@ import fpfinal.service.PersonService.PersonOp
 
 object Syntax {
   implicit class IOOps[A](fa: IO[A]) {
-    def toErrorOr: ErrorOr[A] = EitherT.liftF(fa)
-    def toSt: St[A] = StateT.liftF(fa.toErrorOr)
-    def toAppOp: AppOp[A] = ReaderT.liftF(fa.toSt)
+    def toAppOp: AppOp[A] = {
+      val errorOr: ErrorOr[A] = EitherT.liftF(fa)
+      val st: St[A] = StateT.liftF(errorOr)
+      ReaderT.liftF(st)
+    }
   }
 
   implicit class PersonOps[A](fa: PersonOp[A]) {
-    def toSt: St[A] =
-      StateT { appState =>
-        val (faS, faA) = fa.run(appState.personState).value
-        (appState.copy(personState = faS), faA).pure[ErrorOr]
-      }
-    def toAppOp: AppOp[A] = ReaderT.liftF(fa.toSt)
+    def toAppOp: AppOp[A] = {
+      val st: St[A] =
+        StateT { appState =>
+          val (faS, faA) = fa.run(appState.personState).value
+          (appState.copy(personState = faS), faA).pure[ErrorOr]
+        }
+      ReaderT.liftF(st)
+    }
   }
 
   implicit class ValidOps[A](fa: IsValid[A]) {
-    def toErrorOr: ErrorOr[A] =
-      EitherT.fromEither(
-        fa.toEither
-          .leftMap { e =>
-            s"""Errors: ${e.mkString_("[", "\n", "]")}"""
-          }
-      )
-    def toSt: St[A] = StateT.liftF(fa.toErrorOr)
-    def toAppOp: AppOp[A] = ReaderT.liftF(fa.toSt)
+    def toAppOp: AppOp[A] = {
+      val errorOr: ErrorOr[A] = {
+        EitherT.fromEither(
+          fa.toEither
+            .leftMap { e =>
+              s"""Errors: ${e.mkString_("[", "\n", "]")}"""
+            }
+        )
+
+      }
+      val st: St[A] = StateT.liftF(errorOr)
+      ReaderT.liftF(st)
+    }
   }
 
   implicit class ExpenseOps[A](fa: ExpenseOp[A]) {
-    def toSt: St[A] =
-      StateT { appState =>
+    def toAppOp: AppOp[A] = {
+      val st: St[A] = StateT { appState =>
         val (faS, faA) = fa.run(appState.expenseState).value
         (appState.copy(expenseState = faS), faA).pure[ErrorOr]
       }
-    def toAppOp: AppOp[A] = ReaderT.liftF(fa.toSt)
+      ReaderT.liftF(st)
+    }
   }
 
   implicit class AppOps[A](fa: AppOp[A]) {
