@@ -1,7 +1,6 @@
 package fpfinal.app
 
 import fpfinal.FpFinalSpec
-import fpfinal.app.Configuration.AppState
 import Syntax._
 import fpfinal.model.{Expense, Money, Person}
 import fpfinal.service.PersonService.PersonState

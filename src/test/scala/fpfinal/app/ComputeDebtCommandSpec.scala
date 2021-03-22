@@ -1,9 +1,7 @@
 package fpfinal.app
 
 import fpfinal.FpFinalSpec
-import Syntax._
-import cats.implicits._
-import fpfinal.app.Configuration.AppState
+import fpfinal.app.Syntax._
 import fpfinal.fakes.FakeEnv
 
 class ComputeDebtCommandSpec extends FpFinalSpec {

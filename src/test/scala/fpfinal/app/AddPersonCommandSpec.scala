@@ -1,13 +1,10 @@
 package fpfinal.app
 
-import fpfinal.app.Configuration.AppState
-import fpfinal.FpFinalSpec
 import cats.implicits._
-import Syntax._
+import fpfinal.FpFinalSpec
+import fpfinal.app.Syntax._
 import fpfinal.fakes.FakeEnv
 import fpfinal.model.Person
-
-import scala.Right
 
 class AddPersonCommandSpec extends FpFinalSpec {
   test("Add person command reads data and adds a person to state") {

@@ -1,6 +1,5 @@
 package fpfinal.app
 
-import fpfinal.app.Configuration.{AppState, liveEnv}
 import fpfinal.fakes.FakeEnv
 import fpfinal.service.ExpenseService.ExpenseState
 import fpfinal.service.PersonService.PersonState

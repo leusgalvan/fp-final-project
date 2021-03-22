@@ -1,9 +1,8 @@
 package fpfinal.app
 
-import fpfinal.FpFinalSpec
-import fpfinal.app.Configuration.AppState
 import cats.implicits._
-import Syntax._
+import fpfinal.FpFinalSpec
+import fpfinal.app.Syntax._
 import fpfinal.fakes.FakeEnv
 
 class ListAllPeopleCommandSpec extends FpFinalSpec {

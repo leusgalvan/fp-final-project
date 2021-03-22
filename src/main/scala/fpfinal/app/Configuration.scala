@@ -15,16 +15,6 @@ import fpfinal.service.{
 
 object Configuration {
   type IsValid[A] = Validated[NonEmptyChain[String], A]
-  case class AppState(expenseState: ExpenseState, personState: PersonState)
-  object AppState {
-    implicit def eqAppState(implicit
-        eqExpenseState: Eq[ExpenseState],
-        eqPersonState: Eq[PersonState]
-    ): Eq[AppState] =
-      Eq.instance((as1, as2) =>
-        as1.expenseState === as2.expenseState && as1.personState === as2.personState
-      )
-  }
   type Error = String
   type ErrorOr[A] = EitherT[IO, Error, A]
   type St[A] = StateT[ErrorOr, AppState, A]

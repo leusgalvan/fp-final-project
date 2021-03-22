@@ -1,7 +1,7 @@
 package fpfinal
 
 import cats.implicits._
-import fpfinal.app.Configuration.AppState
+import fpfinal.app.AppState
 import fpfinal.common.IO
 import fpfinal.common.IO.{Done, FlatMap, More}
 import fpfinal.model.{DebtByPayee, DebtByPayer, Expense, Money, Person}
