@@ -25,6 +25,8 @@ object ExpenseService {
       copy(expenses = expense :: expenses)
   }
   object ExpenseState {
+    def empty: ExpenseState = ExpenseState(Nil)
+
     implicit def eqExpenseState(implicit
         eqExpense: Eq[Expense]
     ): Eq[ExpenseState] =

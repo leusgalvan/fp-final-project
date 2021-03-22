@@ -7,6 +7,8 @@ import cats.implicits._
 
 case class AppState(expenseState: ExpenseState, personState: PersonState)
 object AppState {
+  def empty: AppState = AppState(ExpenseState.empty, PersonState.empty)
+
   implicit def eqAppState(implicit
       eqExpenseState: Eq[ExpenseState],
       eqPersonState: Eq[PersonState]

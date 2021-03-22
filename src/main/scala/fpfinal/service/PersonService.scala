@@ -23,6 +23,8 @@ object PersonService {
   }
 
   object PersonState {
+    def empty: PersonState = PersonState(Map.empty)
+
     implicit def eqPersonState(implicit
         eqMap: Eq[Map[String, Person]]
     ): Eq[PersonState] =
