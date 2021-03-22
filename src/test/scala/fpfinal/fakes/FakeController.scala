@@ -1,4 +1,4 @@
-package fpfinal
+package fpfinal.fakes
 
 import fpfinal.app.{Command, Controller}
 

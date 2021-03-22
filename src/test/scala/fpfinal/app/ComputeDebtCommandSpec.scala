@@ -1,9 +1,10 @@
 package fpfinal.app
 
-import fpfinal.{FakeEnv, FpFinalSpec}
+import fpfinal.FpFinalSpec
 import Syntax._
 import cats.implicits._
 import fpfinal.app.Configuration.AppState
+import fpfinal.fakes.FakeEnv
 
 class ComputeDebtCommandSpec extends FpFinalSpec {
   test("compute debt does not crash") {

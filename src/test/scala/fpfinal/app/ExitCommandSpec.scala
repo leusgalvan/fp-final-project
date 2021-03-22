@@ -1,9 +1,10 @@
 package fpfinal.app
 
 import fpfinal.app.Configuration.AppState
-import fpfinal.{FakeEnv, FpFinalSpec}
+import fpfinal.FpFinalSpec
 import cats.implicits._
 import Syntax._
+import fpfinal.fakes.FakeEnv
 
 class ExitCommandSpec extends FpFinalSpec {
   test("Exit command does not alter state") {

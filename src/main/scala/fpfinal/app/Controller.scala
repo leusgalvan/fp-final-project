@@ -14,8 +14,8 @@ trait Controller {
 trait LiveController extends Controller {
   val allCommands: Array[Command] =
     Array(
-      AddExpenseCommand,
       AddPersonCommand,
+      AddExpenseCommand,
       ComputeDebtCommand,
       ListAllPeopleCommand,
       ExitCommand

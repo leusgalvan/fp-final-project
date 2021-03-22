@@ -1,7 +1,5 @@
-package fpfinal
+package fpfinal.fakes
 
-import cats._
-import cats.implicits._
 import fpfinal.app.Console
 import fpfinal.common.IO
 

@@ -1,7 +1,7 @@
 package fpfinal.app
 
-import fpfinal.FakeEnv
 import fpfinal.app.Configuration.{AppState, liveEnv}
+import fpfinal.fakes.FakeEnv
 import fpfinal.service.ExpenseService.ExpenseState
 import fpfinal.service.PersonService.PersonState
 import org.scalatest.funsuite.AnyFunSuite
@@ -11,7 +11,7 @@ class AppSpec extends AnyFunSuite with Matchers {
   test("Successful command flow") {
     val fakeEnv: FakeEnv = new FakeEnv {
       override var linesToRead: List[String] = List(
-        "0", // The command number (add expense)
+        "0", // The command number (add person)
         "Leandro", // The name of the person
         "1", // The command number (add expense)
         "Leandro", // The payer
@@ -19,7 +19,7 @@ class AppSpec extends AnyFunSuite with Matchers {
         "Martin", // The first participant
         "Susan", // The second participant
         "END", // No more participants
-        "2" // The command number (exit)
+        "4" // The command number (exit)
       )
     }
 
@@ -31,7 +31,8 @@ class AppSpec extends AnyFunSuite with Matchers {
       .run
 
     println(x)
-
     println(fakeEnv.linesWritten.mkString("\n"))
+
+    assert(x.isRight)
   }
 }

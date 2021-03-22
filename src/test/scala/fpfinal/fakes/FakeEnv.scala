@@ -1,4 +1,4 @@
-package fpfinal
+package fpfinal.fakes
 
 import fpfinal.app.LiveController
 import fpfinal.service.{LiveExpenseService, LivePersonService}

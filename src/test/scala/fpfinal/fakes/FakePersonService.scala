@@ -1,11 +1,9 @@
-package fpfinal
+package fpfinal.fakes
 
-import cats._
-import cats.implicits._
-import fpfinal.app.Configuration.AppOp
 import fpfinal.model.Person
 import fpfinal.service.PersonService
 import fpfinal.service.PersonService.PersonOp
+import cats.implicits._
 
 trait FakePersonService extends PersonService {
   var peopleAdded = List[Person]()

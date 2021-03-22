@@ -1,11 +1,12 @@
 package fpfinal.app
 
-import fpfinal.{FakeEnv, FpFinalSpec}
+import fpfinal.FpFinalSpec
 import fpfinal.app.Configuration.AppState
 import Syntax._
 import fpfinal.model.{Expense, Money, Person}
 import fpfinal.service.PersonService.PersonState
 import cats.implicits._
+import fpfinal.fakes.FakeEnv
 
 class AddExpenseCommandSpec extends FpFinalSpec {
   test("Add expense command reads data and adds a expense") {

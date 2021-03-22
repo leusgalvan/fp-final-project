@@ -1,9 +1,10 @@
 package fpfinal.app
 
-import fpfinal.{FakeEnv, FpFinalSpec}
+import fpfinal.FpFinalSpec
 import fpfinal.app.Configuration.AppState
 import cats.implicits._
 import Syntax._
+import fpfinal.fakes.FakeEnv
 
 class ListAllPeopleCommandSpec extends FpFinalSpec {
   test("List all people writes people name to console") {
