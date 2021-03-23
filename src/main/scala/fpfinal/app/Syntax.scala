@@ -33,7 +33,7 @@ object Syntax {
         EitherT.fromEither(
           fa.toEither
             .leftMap { e =>
-              s"""Errors: ${e.mkString_("[", "\n", "]")}"""
+              s"""Errors: ${e.mkString_("[", ", ", "]")}"""
             }
         )
 

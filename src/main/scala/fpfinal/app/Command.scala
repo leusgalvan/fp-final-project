@@ -151,7 +151,7 @@ case object ComputeDebtCommand extends Command {
       env <- readEnv
       payerDebt <- env.expenseService.computeDebt().toAppOp
       _ <- env.console.printLine(payerDebt.show).toAppOp
-    } yield "Person created successfully"
+    } yield "Debt computed successfully"
   }
 }
 
@@ -165,7 +165,8 @@ case object ListAllPeopleCommand extends Command {
       _ <-
         env.console
           .printLine(
-            s"List of people:\n\n${people.foldMap(p => s"${p.show}\n")}"
+            s"""List of people:
+               |${people.map(p => s"- ${p.show}").mkString("\n")}""".stripMargin
           )
           .toAppOp
     } yield "All people listed!"

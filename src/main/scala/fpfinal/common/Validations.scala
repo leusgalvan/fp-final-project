@@ -9,7 +9,7 @@ object Validations {
     Validated.condNec(
       s.length <= n,
       s,
-      s"String $s should have length at most $n"
+      s"String should have length at most $n"
     )
 
   def double(s: String): IsValid[Double] =
