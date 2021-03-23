@@ -22,4 +22,7 @@ object Person {
 
   implicit def eqPerson(implicit eqString: Eq[String]): Eq[Person] =
     Eq.instance((p1, p2) => p1.name === p2.name)
+
+  implicit def ordPerson(implicit ordString: Order[String]): Order[Person] =
+    Order.by(_.name)
 }

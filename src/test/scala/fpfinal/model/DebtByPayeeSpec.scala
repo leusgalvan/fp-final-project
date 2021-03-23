@@ -24,7 +24,7 @@ class DebtByPayeeSpec extends FpFinalSpec {
         (DebtByPayee.fromExpense(e1) |+| DebtByPayee.fromExpense(e2))
           .allPayees()
           .toSet eqv
-          (e1.participants concatNel e2.participants).toList.toSet
+          (e1.participants |+| e2.participants).toList.toSet
       )
     }
   }

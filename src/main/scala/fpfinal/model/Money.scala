@@ -34,4 +34,7 @@ object Money {
 
   implicit def eqMoney(implicit eqInt: Eq[Int]): Eq[Money] =
     Eq.instance((m1, m2) => m1.cents === m2.cents)
+
+  implicit def orderMoney(implicit orderInt: Order[Int]): Order[Money] =
+    Order.by(_.cents)
 }

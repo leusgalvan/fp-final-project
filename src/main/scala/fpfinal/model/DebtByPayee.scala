@@ -14,7 +14,7 @@ object DebtByPayee {
 
   def fromExpense(expense: Expense): DebtByPayee =
     new DebtByPayee({
-      expense.participants
+      expense.participants.toList
         .map(p => Map(p -> expense.amountByParticipant))
         .combineAll
     })

@@ -37,7 +37,7 @@ class AppSpec extends AnyFunSuite with Matchers {
         "0", // The command number (add person)
         "Leandro", // The name of the person
         "1", // The command number (add expense)
-        "Masi", // The payer (invalid)
+        "Masi", // The payer (invalid because it does not exist)
         "2000.00", // The amount
         "Martin", // The first participant
         "Susan", // The second participant

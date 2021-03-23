@@ -1,11 +1,14 @@
 package fpfinal.common
 
-import cats.data.{NonEmptyLazyList, NonEmptyList}
+import cats.Order
+import cats.data.NonEmptySet
 import cats.data.Validated.Valid
 import cats.implicits._
 import org.scalacheck.{Arbitrary, Gen}
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
+
+import scala.collection.immutable.SortedSet
 
 class ValidationsSpec extends AnyFunSuite with ScalaCheckDrivenPropertyChecks {
   import Validations._
@@ -38,16 +41,20 @@ class ValidationsSpec extends AnyFunSuite with ScalaCheckDrivenPropertyChecks {
     }
   }
 
-  test("valid nonEmptyList") {
+  test("valid nonEmptySet") {
     implicit val g: Arbitrary[List[Int]] =
       Arbitrary(Gen.nonEmptyListOf(Arbitrary.arbitrary[Int]))
     forAll { (ints: List[Int]) =>
-      assert(nonEmptyList(ints) eqv Valid(NonEmptyList.fromListUnsafe(ints)))
+      assert(
+        nonEmptySet(ints) eqv Valid(
+          NonEmptySet.fromSetUnsafe(SortedSet.from(ints)(Order[Int].toOrdering))
+        )
+      )
     }
   }
 
-  test("invalid nonEmptyList") {
-    assert(nonEmptyList(Nil).isInvalid)
+  test("invalid nonEmptySet") {
+    assert(nonEmptySet[Int](Nil).isInvalid)
   }
 
   test("valid nonEmptyString") {

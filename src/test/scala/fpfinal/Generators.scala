@@ -14,7 +14,9 @@ import org.scalacheck.{Arbitrary, Gen}
 
 trait Generators {
   implicit val personArb: Arbitrary[Person] = Arbitrary {
-    Gen.alphaStr.suchThat(_.nonEmpty).map(Person.unsafeCreate)
+    Gen.alphaStr
+      .suchThat(s => s.nonEmpty && s.length < 32)
+      .map(Person.unsafeCreate)
   }
 
   implicit val moneyArb: Arbitrary[Money] = Arbitrary {

@@ -1,8 +1,11 @@
 package fpfinal.common
 
-import cats.data.{NonEmptyChain, NonEmptyList, Validated}
+import cats.Order
+import cats.data.{NonEmptyChain, NonEmptyList, NonEmptySet, Validated}
 import fpfinal.app.Configuration.IsValid
 import cats.implicits._
+
+import scala.collection.immutable.SortedSet
 
 object Validations {
   def maxLength(s: String, n: Int): IsValid[String] =
@@ -18,8 +21,11 @@ object Validations {
   def nonNegative(x: Double): IsValid[Double] =
     Validated.condNec(x >= 0, x, s"$x should be nonnegative")
 
-  def nonEmptyList[A](list: List[A]): IsValid[NonEmptyList[A]] =
-    Validated.fromOption(list.toNel, NonEmptyChain("List should be non-empty"))
+  def nonEmptySet[A: Order](list: List[A]): IsValid[NonEmptySet[A]] =
+    Validated.fromOption(
+      NonEmptySet.fromSet(SortedSet.from(list)(Order[A].toOrdering)),
+      NonEmptyChain("Elements list should be non-empty")
+    )
 
   def nonEmptyString(s: String): IsValid[String] =
     Validated.condNec(s.nonEmpty, s, "String should be non-empty")

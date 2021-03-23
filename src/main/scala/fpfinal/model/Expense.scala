@@ -1,16 +1,17 @@
 package fpfinal.model
 
 import cats._
-import cats.implicits._
-import cats.data.Validated.{Invalid, Valid}
 import cats.data._
+import cats.implicits._
 import fpfinal.app.Configuration.IsValid
 import fpfinal.common.Validations._
+
+import scala.collection.immutable.SortedSet
 
 class Expense private (
     val payer: Person,
     val amount: Money,
-    val participants: NonEmptyList[Person]
+    val participants: NonEmptySet[Person]
 ) {
   def amountByParticipant: Money =
     amount
@@ -25,7 +26,12 @@ object Expense {
       payer: Person,
       amount: Money,
       participants: List[Person]
-  ): Expense = new Expense(payer, amount, participants.toNel.get)
+  ): Expense =
+    new Expense(
+      payer,
+      amount,
+      NonEmptySet.fromSetUnsafe(SortedSet.from(participants))
+    )
 
   def create(
       payer: Person,
@@ -33,7 +39,7 @@ object Expense {
       participants: List[Person]
   ): IsValid[Expense] = {
     (
-      nonEmptyList(participants),
+      nonEmptySet(participants),
       Validated.condNec(
         !participants.contains(payer),
         payer,
