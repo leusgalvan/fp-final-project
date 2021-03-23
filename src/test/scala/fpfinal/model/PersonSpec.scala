@@ -4,7 +4,7 @@ import cats.data.Validated.Valid
 import cats.implicits._
 import cats.kernel.laws.discipline.{EqTests, OrderTests}
 import fpfinal.FpFinalSpec
-import org.scalacheck.Gen
+import org.scalacheck.{Arbitrary, Gen}
 
 class PersonSpec extends FpFinalSpec {
   test("create a valid person") {
@@ -17,6 +17,17 @@ class PersonSpec extends FpFinalSpec {
 
   test("create invalid person with empty name") {
     assert(Person.create("").isInvalid)
+  }
+
+  test("create invalid person with long name") {
+    val g: Gen[String] = for {
+      n <- Gen.choose(33, 1000)
+      s <- Gen.stringOfN(n, Gen.alphaChar)
+    } yield s
+
+    forAll(g) { (name: String) =>
+      assert(Person.create(name).isInvalid)
+    }
   }
 
   checkAll("Eq[Person]", EqTests[Person].eqv)

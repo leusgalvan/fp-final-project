@@ -1,10 +1,13 @@
 package fpfinal.model
 
 import cats._
+import cats.data.NonEmptySet
 import cats.implicits._
 import cats.kernel.laws.discipline.{EqTests, MonoidTests}
 import fpfinal.FpFinalSpec
 import org.scalacheck.Prop.forAll
+
+import scala.collection.immutable.SortedSet
 
 class DebtByPayeeSpec extends FpFinalSpec {
   test("payees are the participants from the expense") {
@@ -20,12 +23,14 @@ class DebtByPayeeSpec extends FpFinalSpec {
 
   test("combining yields the union of the payees") {
     forAll { (e1: Expense, e2: Expense) =>
-      assert(
-        (DebtByPayee.fromExpense(e1) |+| DebtByPayee.fromExpense(e2))
-          .allPayees()
-          .toSet eqv
-          (e1.participants |+| e2.participants).toList.toSet
+      val lhs = NonEmptySet.fromSetUnsafe(
+        SortedSet.from(
+          (DebtByPayee.fromExpense(e1) |+| DebtByPayee.fromExpense(e2))
+            .allPayees()
+        )
       )
+      val rhs = e1.participants |+| e2.participants
+      assert(lhs eqv rhs)
     }
   }
 

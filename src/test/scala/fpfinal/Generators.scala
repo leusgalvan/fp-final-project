@@ -14,22 +14,27 @@ import org.scalacheck.{Arbitrary, Gen}
 
 trait Generators {
   implicit val personArb: Arbitrary[Person] = Arbitrary {
-    Gen.alphaStr
-      .suchThat(s => s.nonEmpty && s.length < 32)
-      .map(Person.unsafeCreate)
+    for {
+      n <- Gen.choose(0, 32)
+      name <- Gen.stringOfN(n, Gen.alphaChar)
+    } yield Person.unsafeCreate(name)
   }
 
   implicit val moneyArb: Arbitrary[Money] = Arbitrary {
     Gen.choose(1, 1e9.toInt).map(Money.unsafeCreate)
   }
 
-  implicit val expenseArb: Arbitrary[Expense] = Arbitrary {
-    for {
-      person <- personArb.arbitrary
-      money <- moneyArb.arbitrary
-      participants <- Gen.nonEmptyListOf(personArb.arbitrary)
-    } yield Expense.unsafeCreate(person, money, participants)
-  }
+  implicit def expenseArb(implicit
+      arbPerson: Arbitrary[Person],
+      arbMoney: Arbitrary[Money]
+  ): Arbitrary[Expense] =
+    Arbitrary {
+      for {
+        person <- arbPerson.arbitrary
+        money <- arbMoney.arbitrary
+        participants <- Gen.nonEmptyListOf(arbPerson.arbitrary)
+      } yield Expense.unsafeCreate(person, money, participants)
+    }
 
   implicit val payeeDebtArb: Arbitrary[DebtByPayee] = Arbitrary {
     Gen

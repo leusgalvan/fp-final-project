@@ -26,18 +26,22 @@ object DebtByPayer {
   ): Monoid[DebtByPayer] =
     monoidMap.imap(DebtByPayer.unsafeCreate)(_.debtByPerson)
 
-  implicit val showDebtByPayer: Show[DebtByPayer] = Show.show { debtByPayer =>
-    s"""Debt by payer:
+  implicit def showDebtByPayer(implicit
+      showPerson: Show[Person],
+      showDebtByPayee: Show[DebtByPayee]
+  ): Show[DebtByPayer] =
+    Show.show { debtByPayer =>
+      s"""Debt by payer:
        |
        |${debtByPayer
-      .allPayers()
-      .toNel
-      .fold("  No debts found")(
-        _.foldMap(payer =>
-          s"${payer.show}:\n" + debtByPayer
-            .debtForPayer(payer)
-            .foldMap(_.show)
-        )
-      )}""".stripMargin
-  }
+        .allPayers()
+        .toNel
+        .fold("  No debts found")(
+          _.foldMap(payer =>
+            s"${payer.show}:\n" + debtByPayer
+              .debtForPayer(payer)
+              .foldMap(_.show)
+          )
+        )}""".stripMargin
+    }
 }

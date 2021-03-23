@@ -53,7 +53,7 @@ object Expense {
   implicit def eqExpense(implicit
       eqPerson: Eq[Person],
       eqMoney: Eq[Money],
-      eqParticipants: Eq[List[Person]]
+      eqParticipants: Eq[NonEmptySet[Person]]
   ): Eq[Expense] =
     Eq.instance((e1, e2) =>
       e1.payer === e2.payer && e1.amount === e2.amount && e1.participants === e2.participants
