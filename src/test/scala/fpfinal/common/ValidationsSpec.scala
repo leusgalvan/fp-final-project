@@ -73,4 +73,30 @@ class ValidationsSpec extends AnyFunSuite with ScalaCheckDrivenPropertyChecks {
       assert(allLetters(s).isInvalid)
     }
   }
+
+  test("valid maxLength") {
+    val g: Gen[(Int, String)] = for {
+      n <- Gen.choose(0, 1000)
+      m <- Gen.choose(0, n)
+      s <- Gen.stringOfN(m, Arbitrary.arbitrary[Char])
+    } yield (n, s)
+
+    forAll(g) {
+      case (n: Int, s: String) =>
+        assert(maxLength(s, n) eqv Valid(s))
+    }
+  }
+
+  test("invalid maxLength") {
+    val g: Gen[(Int, String)] = for {
+      n <- Gen.choose(0, 1000)
+      m <- Gen.choose(n + 1, n + 1000)
+      s <- Gen.stringOfN(m, Arbitrary.arbitrary[Char])
+    } yield (n, s)
+
+    forAll(g) {
+      case (n: Int, s: String) =>
+        assert(maxLength(s, n).isInvalid)
+    }
+  }
 }

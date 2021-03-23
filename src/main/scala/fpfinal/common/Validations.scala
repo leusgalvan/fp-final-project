@@ -5,6 +5,13 @@ import fpfinal.app.Configuration.IsValid
 import cats.implicits._
 
 object Validations {
+  def maxLength(s: String, n: Int): IsValid[String] =
+    Validated.condNec(
+      s.length <= n,
+      s,
+      s"String $s should have length at most $n"
+    )
+
   def double(s: String): IsValid[Double] =
     Validated.fromOption(s.toDoubleOption, NonEmptyChain("Invalid double"))
 
