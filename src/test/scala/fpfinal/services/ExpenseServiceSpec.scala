@@ -2,13 +2,10 @@ package fpfinal.services
 
 import cats._
 import cats.implicits._
-import fpfinal.{FpFinalSpec, Generators}
-import fpfinal.model.{DebtByPayee, DebtByPayer, Expense, Money, Person}
+import fpfinal.FpFinalSpec
+import fpfinal.model._
 import fpfinal.service.ExpenseService.ExpenseState
-import fpfinal.service.{ExpenseService, LiveExpenseService}
-import org.scalacheck.Prop.forAll
-import org.scalatest.funsuite.AnyFunSuite
-import org.scalatest.matchers.should.Matchers
+import fpfinal.service.LiveExpenseService
 
 class ExpenseServiceSpec extends FpFinalSpec {
   val service: LiveExpenseService#Service =

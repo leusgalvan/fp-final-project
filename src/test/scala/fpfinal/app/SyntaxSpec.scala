@@ -1,11 +1,11 @@
 package fpfinal.app
 
-import fpfinal.FpFinalSpec
-import Syntax._
 import cats.data.Validated.{Invalid, Valid}
-import fpfinal.app.Configuration.{IsValid, liveEnv}
-import fpfinal.common.IO
 import cats.implicits._
+import fpfinal.FpFinalSpec
+import fpfinal.app.Configuration.{IsValid, liveEnv}
+import fpfinal.app.Syntax._
+import fpfinal.common.IO
 import fpfinal.service.ExpenseService.ExpenseOp
 import fpfinal.service.PersonService.PersonOp
 

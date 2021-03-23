@@ -1,11 +1,9 @@
 package fpfinal.app
 
-import fpfinal.app.Configuration.{AppOp, Environment, St, SuccessMsg, readEnv}
 import cats._
 import cats.implicits._
-import Syntax._
-
-import scala.annotation.tailrec
+import fpfinal.app.Configuration.{AppOp, readEnv}
+import fpfinal.app.Syntax._
 
 object App {
   val ME = MonadError[AppOp, String]

@@ -1,13 +1,12 @@
 package fpfinal
 
 import cats.data.{NonEmptyChain, State}
-import cats.data.Validated.Valid
 import cats.implicits._
 import fpfinal.app.AppState
 import fpfinal.app.Configuration.IsValid
 import fpfinal.common.IO
 import fpfinal.common.IO.{Done, FlatMap, More}
-import fpfinal.model.{DebtByPayee, DebtByPayer, Expense, Money, Person}
+import fpfinal.model._
 import fpfinal.service.ExpenseService.{ExpenseOp, ExpenseState}
 import fpfinal.service.PersonService.{PersonOp, PersonState}
 import org.scalacheck.{Arbitrary, Gen}

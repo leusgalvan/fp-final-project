@@ -1,9 +1,9 @@
 package fpfinal.app
 
 import cats.Eq
+import cats.implicits._
 import fpfinal.service.ExpenseService.ExpenseState
 import fpfinal.service.PersonService.PersonState
-import cats.implicits._
 
 case class AppState(expenseState: ExpenseState, personState: PersonState)
 object AppState {

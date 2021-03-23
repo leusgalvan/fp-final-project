@@ -1,10 +1,10 @@
 package fpfinal.fakes
 
 import cats.Monoid
+import cats.implicits._
 import fpfinal.model.{DebtByPayer, Expense}
 import fpfinal.service.ExpenseService
 import fpfinal.service.ExpenseService.ExpenseOp
-import cats.implicits._
 
 trait FakeExpenseService extends ExpenseService {
 

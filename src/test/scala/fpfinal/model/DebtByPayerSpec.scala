@@ -1,9 +1,8 @@
 package fpfinal.model
 
-import cats.kernel.laws.discipline.{EqTests, MonoidTests}
 import cats.implicits._
+import cats.kernel.laws.discipline.{EqTests, MonoidTests}
 import fpfinal.FpFinalSpec
-import org.scalacheck.Prop.forAll
 
 class DebtByPayerSpec extends FpFinalSpec {
   test("payer is the payer from the expense") {

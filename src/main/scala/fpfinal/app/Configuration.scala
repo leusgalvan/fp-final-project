@@ -1,11 +1,7 @@
 package fpfinal.app
 
-import cats._
 import cats.data._
-import cats.implicits._
 import fpfinal.common.IO
-import fpfinal.service.ExpenseService.ExpenseState
-import fpfinal.service.PersonService.PersonState
 import fpfinal.service.{
   ExpenseService,
   LiveExpenseService,

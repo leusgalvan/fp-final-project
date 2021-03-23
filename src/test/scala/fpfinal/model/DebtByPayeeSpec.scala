@@ -1,11 +1,9 @@
 package fpfinal.model
 
-import cats._
 import cats.data.NonEmptySet
 import cats.implicits._
 import cats.kernel.laws.discipline.{EqTests, MonoidTests}
 import fpfinal.FpFinalSpec
-import org.scalacheck.Prop.forAll
 
 import scala.collection.immutable.SortedSet
 

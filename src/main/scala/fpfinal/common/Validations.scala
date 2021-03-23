@@ -1,9 +1,8 @@
 package fpfinal.common
 
 import cats.Order
-import cats.data.{NonEmptyChain, NonEmptyList, NonEmptySet, Validated}
+import cats.data.{NonEmptyChain, NonEmptySet, Validated}
 import fpfinal.app.Configuration.IsValid
-import cats.implicits._
 
 import scala.collection.immutable.SortedSet
 

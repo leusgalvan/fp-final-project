@@ -1,9 +1,9 @@
 package fpfinal.service
 
-import cats.data._
 import cats._
+import cats.data._
 import cats.implicits._
-import fpfinal.model.{Expense, DebtByPayer}
+import fpfinal.model.{DebtByPayer, Expense}
 
 trait ExpenseService {
   import ExpenseService._

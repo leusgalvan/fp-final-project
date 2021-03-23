@@ -1,8 +1,8 @@
 package fpfinal.service
 
 import cats._
-import cats.implicits._
 import cats.data._
+import cats.implicits._
 import fpfinal.model.Person
 
 trait PersonService {

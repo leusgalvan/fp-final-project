@@ -1,12 +1,12 @@
 package fpfinal.common
 
+import cats._
+import cats.implicits._
 import cats.laws.discipline.MonadTests
 import fpfinal.Generators
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.prop.Configuration
 import org.typelevel.discipline.scalatest.FunSuiteDiscipline
-import cats._
-import cats.implicits._
 
 class IOSpec
     extends AnyFunSuite

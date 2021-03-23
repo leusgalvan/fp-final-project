@@ -1,10 +1,8 @@
 package fpfinal.app
 
-import cats.implicits._
 import fpfinal.common.IO
 
 import scala.io.StdIn
-import scala.util.Try
 
 trait Console {
   val console: Service

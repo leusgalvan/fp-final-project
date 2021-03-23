@@ -1,15 +1,10 @@
 package fpfinal.model
 
-import cats.data.Validated.{Invalid, Valid}
+import cats.data.Validated.Valid
 import cats.implicits._
 import cats.kernel.laws.discipline.EqTests
-import fpfinal.{FpFinalSpec, Generators}
-import org.scalacheck.Prop.forAll
+import fpfinal.FpFinalSpec
 import org.scalacheck.{Arbitrary, Gen}
-import org.scalatest.funsuite.AnyFunSuite
-import org.scalatest.matchers.should.Matchers
-import org.scalatest.prop.Configuration
-import org.typelevel.discipline.scalatest.FunSuiteDiscipline
 
 class ExpenseSpec extends FpFinalSpec {
   test("create a valid expense") {

@@ -1,9 +1,9 @@
 package fpfinal.model
 
-import fpfinal.app.Configuration.IsValid
-import fpfinal.common.Validations._
 import cats._
 import cats.implicits._
+import fpfinal.app.Configuration.IsValid
+import fpfinal.common.Validations._
 import fpfinal.model.Person.showPerson
 
 class Person private (val name: String) {
