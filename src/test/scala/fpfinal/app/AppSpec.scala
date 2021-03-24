@@ -36,13 +36,19 @@ class AppSpec extends AnyFunSuite with Matchers {
       override var linesToRead: List[String] = List(
         "0", // The command number (add person)
         "Leandro", // The name of the person
+        "0", // The command number (add person)
+        "Martin", // The name of the person
         "1", // The command number (add expense)
         "Masi", // The payer (does not exist)
-        "2000.00", // The amount
-        "Martin", // The first participant (does not exist)
-        "Susan", // The second participant (does not exist)
+        "2000", // The amount
+        "Martin", // First participant
         "END", // No more participants
-        "4" // List all people
+        "1", // The command number (add expense)
+        "Martin", // The payer
+        "2000", // The amount
+        "Leandro", // First participant
+        "END", // No more participants
+        "4" // Exit
       )
     }
 
@@ -53,5 +59,7 @@ class AppSpec extends AnyFunSuite with Matchers {
       .value
       .run
       .isRight
+
+    assert(fakeEnv.linesWritten.mkString(" ").contains("Person not found"))
   }
 }

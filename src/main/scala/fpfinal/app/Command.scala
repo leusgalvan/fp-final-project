@@ -52,18 +52,13 @@ object AddExpenseCommand extends Command {
     }
 
     def readParticipants(): AppOp[List[String]] = {
-      for {
-        env <- readEnv
-        p <-
-          env.console
-            .readLine(
-              s"Enter name of participant (or END to finish): "
-            )
-            .toAppOp
-        ps <-
-          if (p === "END") List.empty[String].pure[AppOp]
-          else readParticipants()
-      } yield if (p === "END") ps else (p :: ps)
+      val msg = s"Enter name of participant (or END to finish): "
+      ME.tailRecM(List[String]()) { (xs: List[String]) =>
+        for {
+          env <- readEnv
+          p <- env.console.readLine(msg).toAppOp
+        } yield if (p === "END") Right(xs) else Left(p :: xs)
+      }
     }
 
     def validateData(
@@ -89,21 +84,22 @@ object AddExpenseCommand extends Command {
       } yield validData
     }
 
+    def findPerson(name: String): AppOp[Person] =
+      for {
+        env <- readEnv
+        person <-
+          env.personService
+            .findByName(name)
+            .toAppOp
+            .flatMap(p => ME.fromOption(p, s"Person not found: ${name}"))
+      } yield person
+
     for {
       env <- readEnv
       data <- readData()
-      payer <-
-        env.personService
-          .findByName(data.payer)
-          .toAppOp
-          .flatMap(p => ME.fromOption(p, s"Payer not found: ${data.payer}"))
+      payer <- findPerson(data.payer)
       amount <- Money.dollars(data.amount).toAppOp
-      participants <- data.participants.traverse { p =>
-        env.personService
-          .findByName(p)
-          .toAppOp
-          .flatMap(p => ME.fromOption(p, s"Payer not found: ${p}"))
-      }
+      participants <- data.participants.traverse { findPerson }
       expense <- Expense.create(payer, amount, participants).toAppOp
       _ <- env.expenseService.addExpense(expense).toAppOp
     } yield "Expense created successfully"
