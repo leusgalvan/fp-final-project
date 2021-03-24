@@ -14,7 +14,7 @@ import org.scalacheck.{Arbitrary, Gen}
 trait Generators {
   implicit val personArb: Arbitrary[Person] = Arbitrary {
     for {
-      n <- Gen.choose(0, 32)
+      n <- Gen.choose(1, 32)
       name <- Gen.stringOfN(n, Gen.alphaChar)
     } yield Person.unsafeCreate(name)
   }
