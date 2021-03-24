@@ -4,9 +4,16 @@ import cats._
 import cats.implicits._
 
 class DebtByPayer private (val debtByPerson: Map[Person, DebtByPayee]) {
-  def debtForPayer(person: Person): Option[DebtByPayee] =
-    debtByPerson.get(person)
-  def allPayers(): List[Person] = debtByPerson.keySet.toList
+
+  /**
+    * TODO: Get the debt summary by payee for this payer
+    */
+  def debtForPayer(person: Person): Option[DebtByPayee] = ???
+
+  /**
+    * TODO: Get all the payers in a list
+    */
+  def allPayers(): List[Person] = ???
 }
 
 object DebtByPayer {
@@ -21,10 +28,15 @@ object DebtByPayer {
   ): Eq[DebtByPayer] =
     Eq.instance((d1, d2) => d1.debtByPerson === d2.debtByPerson)
 
+  /**
+    * TODO: Implement a monoid instance.
+    *
+    * Hint: Use the monoidMap instance and a suitable method to convert it
+    * to the instance you need.
+    */
   implicit def monoidDebtByPayer(implicit
       monoidMap: Monoid[Map[Person, DebtByPayee]]
-  ): Monoid[DebtByPayer] =
-    monoidMap.imap(DebtByPayer.unsafeCreate)(_.debtByPerson)
+  ): Monoid[DebtByPayer] = ???
 
   implicit def showDebtByPayer(implicit
       showPerson: Show[Person],

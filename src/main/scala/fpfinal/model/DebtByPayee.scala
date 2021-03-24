@@ -4,32 +4,45 @@ import cats._
 import cats.implicits._
 
 class DebtByPayee private (val debtByPayee: Map[Person, Money]) {
-  def debtForPayee(person: Person): Option[Money] = debtByPayee.get(person)
-  def allPayees(): List[Person] = debtByPayee.keySet.toList
+
+  /**
+    * TODO: Return the debt for this payee
+    */
+  def debtForPayee(person: Person): Option[Money] = ???
+
+  /**
+    * TODO: Return all the payees as a list
+    */
+  def allPayees(): List[Person] = ???
 }
 
 object DebtByPayee {
   def unsafeCreate(debtByPayee: Map[Person, Money]): DebtByPayee =
     new DebtByPayee(debtByPayee)
 
-  def fromExpense(expense: Expense): DebtByPayee =
-    new DebtByPayee({
-      expense.participants.toList
-        .map(p => Map(p -> expense.amountByParticipant))
-        .combineAll
-    })
+  /**
+    * TODO: Create a DebtByPayee instance using the information from this Expense.
+    * Each participant should get the same debt to the payer.
+    */
+  def fromExpense(expense: Expense): DebtByPayee = ???
 
+  /**
+    * TODO: Implement an eq instance and their corresponding tests.
+    * Two values are equal iff their debtByPayee maps are equal.
+    */
   implicit def eqDebtByPayee(implicit
       eqMap: Eq[Map[Person, Money]]
-  ): Eq[DebtByPayee] =
-    Eq.instance { (d1, d2) =>
-      d1.debtByPayee eqv d2.debtByPayee
-    }
+  ): Eq[DebtByPayee] = ???
 
+  /**
+    * TODO: Implement a monoid instance.
+    *
+    * Hint: Use the monoidMap instance and a suitable method to convert it
+    * to the instance you need.
+    */
   implicit def monoidDebtByPayee(implicit
       monoidMap: Monoid[Map[Person, Money]]
-  ): Monoid[DebtByPayee] =
-    monoidMap.imap(x => new DebtByPayee(x))(_.debtByPayee)
+  ): Monoid[DebtByPayee] = ???
 
   implicit def showDebtByPayee(implicit
       personShow: Show[Person],

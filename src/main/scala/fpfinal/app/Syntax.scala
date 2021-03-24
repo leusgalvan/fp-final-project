@@ -17,14 +17,14 @@ object Syntax {
   }
 
   implicit class PersonOps[A](fa: PersonOp[A]) {
-    def toAppOp: AppOp[A] = {
-      val st: St[A] =
-        StateT { appState =>
-          val (faS, faA) = fa.run(appState.personState).value
-          (appState.copy(personState = faS), faA).pure[ErrorOr]
-        }
-      ReaderT.liftF(st)
-    }
+
+    /**
+      * TODO: Translate between a PersonOp and an AppOp.
+      *
+      * Make sure the resulting AppState contains the PersonState
+      * from this PersonOp.
+      */
+    def toAppOp: AppOp[A] = ???
   }
 
   implicit class ValidOps[A](fa: IsValid[A]) {

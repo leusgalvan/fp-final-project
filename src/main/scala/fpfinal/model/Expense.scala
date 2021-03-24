@@ -13,12 +13,12 @@ class Expense private (
     val amount: Money,
     val participants: NonEmptySet[Person]
 ) {
-  def amountByParticipant: Money =
-    amount
-      .divideBy(participants.length + 1)
-      .get // safe get because divisor is never 0
-  override def toString: String =
-    s"Expense(${payer.show}, ${amount.show}, ${participants.show}"
+
+  /**
+    * TODO: Divide this amount accross the payer and the participants so each
+    * has the same debt for this expense
+    */
+  def amountByParticipant: Money = ???
 }
 
 object Expense {
@@ -33,29 +33,24 @@ object Expense {
       NonEmptySet.fromSetUnsafe(SortedSet.from(participants))
     )
 
+  /**
+    * TODO: Create a validated expense. The validations to perform are:
+    * - The participants list should not be empty
+    * - The payer should not be included in the participants
+    *
+    * Note: List's contains method will use == equality. Figure out a way
+    * to use the equality instance received in the implicit argument eqPerson
+    */
   def create(
       payer: Person,
       amount: Money,
       participants: List[Person]
-  ): IsValid[Expense] = {
-    (
-      nonEmptySet(participants),
-      Validated.condNec(
-        !participants.contains(payer),
-        payer,
-        "payer cannot be included in participants"
-      )
-    ).mapN { (ps, p) =>
-      new Expense(p, amount, ps)
-    }
-  }
+  )(implicit eqPerson: Eq[Person]): IsValid[Expense] = ???
 
-  implicit def eqExpense(implicit
-      eqPerson: Eq[Person],
-      eqMoney: Eq[Money],
-      eqParticipants: Eq[NonEmptySet[Person]]
-  ): Eq[Expense] =
-    Eq.instance((e1, e2) =>
-      e1.payer === e2.payer && e1.amount === e2.amount && e1.participants === e2.participants
-    )
+  /**
+    * TODO: Implement an Eq instance by comparing every field.
+    * Parameterize it so that we can pass definitions of Eq for
+    * each of the types we need to compare (i.e.: Person, Money, NonEmptySet[Person]).
+    */
+  implicit def eqExpense = ???
 }

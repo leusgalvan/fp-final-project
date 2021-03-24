@@ -34,16 +34,14 @@ object PersonService {
   type PersonOp[A] = State[PersonState, A]
 }
 
-trait LivePersonService extends PersonService {
-  import PersonService._
-  override val personService: Service = new Service {
-    override def findByName(name: String): PersonOp[Option[Person]] =
-      State.inspect(_.personByName.get(name))
-
-    override def addPerson(person: Person): PersonOp[Unit] =
-      State.modify(_.addPerson(person))
-
-    override def getAllPeople(): PersonOp[List[Person]] =
-      State.inspect(_.personByName.values.toList)
-  }
-}
+/**
+  * Implement a LivePersonService with an implementation for PersonService.
+  *
+  * findByName returns the person in the state with the given name,
+  * or None if it doesn't find it.
+  *
+  * addPerson adds a Person to the state, returning Unit.
+  *
+  * getAllPeople returns a list with all the people in the state.
+  */
+// trait LivePersonService...

@@ -56,6 +56,5 @@ class DebtByPayeeSpec extends FpFinalSpec {
     }
   }
 
-  checkAll("Eq[DebtByPayee]", EqTests[DebtByPayee].eqv)
-  checkAll("Monoid[DebtByPayee]", MonoidTests[DebtByPayee].monoid)
+  // Typeclass instances tests here...
 }

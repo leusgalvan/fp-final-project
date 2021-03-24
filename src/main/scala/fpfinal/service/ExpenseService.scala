@@ -34,16 +34,20 @@ object ExpenseService {
   }
 }
 
-trait LiveExpenseService extends ExpenseService {
-  import ExpenseService._
-  override val expenseService: Service = new Service {
-    override def addExpense(
-        expense: Expense
-    ): ExpenseOp[Expense] = {
-      State(s => (s.addExpense(expense), expense))
-    }
-
-    override def computeDebt(): ExpenseOp[DebtByPayer] =
-      State.inspect(_.expenses.foldMap(DebtByPayer.fromExpense))
-  }
-}
+/**
+  * TODO: Implement a LiveExpenseService to implement the ExpenseService trait.
+  *
+  * The addExpense method should add the given expense to the ExpenseState, and return it
+  * as it is.
+  *
+  * The computeDebt method should use the expenses stored in the state and compute
+  * a DebtByPayer object. This object contains a summary of how much is owed to each person.
+  *
+  * For example, if A made an expense of 6 dollars where B and C were included, then each owe A 2 dollars.
+  * This means the DebtByPayer object will contain an entry for A as a payer. If we call
+  * debtForPayer(A) we'll get back a DebtForPayee object with one entry for B (who owes 2 dollares)
+  * and one entry for C (who owes 2 dollars).
+  *
+  * Check the tests for a concrete example.
+  */
+// trait LiveExpenseService...

@@ -7,15 +7,16 @@ import fpfinal.app.Configuration.IsValid
 import scala.collection.immutable.SortedSet
 
 object Validations {
-  def maxLength(s: String, n: Int): IsValid[String] =
-    Validated.condNec(
-      s.length <= n,
-      s,
-      s"String should have length at most $n"
-    )
 
-  def double(s: String): IsValid[Double] =
-    Validated.fromOption(s.toDoubleOption, NonEmptyChain("Invalid double"))
+  /**
+    * TODO: Check that this String's length does not exceed the provided limit.
+    */
+  def maxLength(s: String, n: Int): IsValid[String] = ???
+
+  /**
+    * TODO: Turn this String into a validated double
+    */
+  def double(s: String): IsValid[Double] = ???
 
   def nonNegative(x: Double): IsValid[Double] =
     Validated.condNec(x >= 0, x, s"Double should be nonnegative")

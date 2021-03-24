@@ -49,6 +49,8 @@ class MoneySpec extends FpFinalSpec {
       assert(money.divideBy(n).map(_.cents) eqv Some(money.cents / n))
     }
   }
+
+  // Typeclass instances tests here...
   checkAll("Eq[Money]", EqTests[Money].eqv)
   checkAll("Monoid[Money]", MonoidTests[Money].monoid)
 }

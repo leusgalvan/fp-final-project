@@ -51,29 +51,26 @@ object AddExpenseCommand extends Command {
       } yield amount
     }
 
-    def readParticipants(): AppOp[List[String]] = {
-      val msg = s"Enter name of participant (or END to finish): "
-      ME.tailRecM(List[String]()) { (xs: List[String]) =>
-        for {
-          env <- readEnv
-          p <- env.console.readLine(msg).toAppOp
-        } yield if (p === "END") Right(xs) else Left(p :: xs)
-      }
-    }
+    /**
+      * TODO: Implement a function that reads participant names from console until the
+      * user enters END to finish.
+      *
+      * Extra points: implement it using ME.tailRecM
+      */
+    def readParticipants(): AppOp[List[String]] = ???
 
+    /**
+      * TODO: Use the helper functions in common.Validations and return a validated
+      * instance of AddExpenseData. The validations to perform are:
+      * - payer should be a nonempty string
+      * - amount should be a valid double
+      * - all participants should be nonempty strings
+      */
     def validateData(
         payer: String,
         amount: String,
         participants: List[String]
-    ): IsValid[AddExpenseData] = {
-      (
-        nonEmptyString(payer),
-        double(amount),
-        participants.traverse(nonEmptyString)
-      ).mapN { (p, a, ps) =>
-        AddExpenseData(p, a, ps)
-      }
-    }
+    ): IsValid[AddExpenseData] = ???
 
     def readData(): AppOp[AddExpenseData] = {
       for {
@@ -84,15 +81,18 @@ object AddExpenseCommand extends Command {
       } yield validData
     }
 
-    def findPerson(name: String): AppOp[Person] =
-      for {
-        env <- readEnv
-        person <-
-          env.personService
-            .findByName(name)
-            .toAppOp
-            .flatMap(p => ME.fromOption(p, s"Person not found: ${name}"))
-      } yield person
+    /**
+      * TODO: Implement a function that finds a person by name.
+      *
+      * It should be a wrapper of the PersonService analogous function,
+      * handling translation between types and converting None results to errors
+      * using the provided message (notice the return type is Person, and not
+      * Option[Person]).
+      */
+    def findPerson(name: String): AppOp[Person] = {
+      lazy val msg = s"Person not found: $name"
+      ???
+    }
 
     for {
       env <- readEnv
@@ -128,12 +128,11 @@ case object AddPersonCommand extends Command {
       } yield validData
     }
 
-    for {
-      env <- readEnv
-      data <- readData()
-      person <- Person.create(data.name).toAppOp
-      _ <- env.personService.addPerson(person).toAppOp
-    } yield "Person created successfully"
+    /**
+      * TODO: Read person data from console and use it to add a person to the state.
+      * Upon successful completion, return the message 'Person created successfully'.
+      */
+    ???
   }
 }
 
