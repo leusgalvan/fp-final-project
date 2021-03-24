@@ -129,7 +129,9 @@ case object AddPersonCommand extends Command {
     }
 
     /**
-      * TODO: Read person data from console and use it to add a person to the state.
+      * TODO: Use readData() to read person data from console and use it to add a
+      * new person to the state.
+      *
       * Upon successful completion, return the message 'Person created successfully'.
       */
     ???
