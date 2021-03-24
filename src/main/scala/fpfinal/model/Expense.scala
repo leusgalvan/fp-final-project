@@ -53,4 +53,11 @@ object Expense {
     * each of the types we need to compare (i.e.: Person, Money, NonEmptySet[Person]).
     */
   implicit def eqExpense = ???
+
+  /**
+    * TODO: Implement a Show instance with the following format:
+    *
+    * Expense[Payer=Martin,Amount=$10.00,Participants=Bob,Susan]
+    */
+  implicit val showExpense: Show[Expense] = ???
 }

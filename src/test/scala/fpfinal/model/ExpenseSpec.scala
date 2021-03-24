@@ -38,5 +38,16 @@ class ExpenseSpec extends FpFinalSpec {
     }
   }
 
+  test("show an expense") {
+    val e: Expense = Expense.unsafeCreate(
+      Person.unsafeCreate("Martin"),
+      Money.unsafeCreate(1000),
+      List(Person.unsafeCreate("Susan"), Person.unsafeCreate("Bob"))
+    )
+    assert(
+      e.show eqv "Expense[Payer=Martin,Amount=$10.00,Participants=Bob,Susan]"
+    )
+  }
+
   // Typeclass instances tests here...
 }
