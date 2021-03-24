@@ -18,7 +18,7 @@ class Expense private (
       .divideBy(participants.length + 1)
       .get // safe get because divisor is never 0
   override def toString: String =
-    s"Expense(${payer.show}, ${amount.show}, ${participants.show}"
+    Show[Expense].show(this)
 }
 
 object Expense {
@@ -58,4 +58,8 @@ object Expense {
     Eq.instance((e1, e2) =>
       e1.payer === e2.payer && e1.amount === e2.amount && e1.participants === e2.participants
     )
+
+  implicit val showExpense: Show[Expense] = Show.show { e =>
+    s"Expense[Payer=${e.payer.show},Amount=${e.amount.show},Participants=${e.participants.mkString_(",")}]"
+  }
 }
