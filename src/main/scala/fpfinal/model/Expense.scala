@@ -37,11 +37,11 @@ object Expense {
       payer: Person,
       amount: Money,
       participants: List[Person]
-  ): IsValid[Expense] = {
+  )(implicit eqPerson: Eq[Person]): IsValid[Expense] = {
     (
       nonEmptySet(participants),
       Validated.condNec(
-        !participants.contains(payer),
+        Foldable[List].forall(participants)(_ neqv payer),
         payer,
         "payer cannot be included in participants"
       )
