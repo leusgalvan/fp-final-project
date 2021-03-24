@@ -8,7 +8,10 @@ import org.scalacheck.Gen
 
 class PersonSpec extends FpFinalSpec {
   test("create a valid person") {
-    val g: Gen[String] = Gen.alphaStr.suchThat(s => s.nonEmpty && s.length < 32)
+    val g: Gen[String] = for {
+      n <- Gen.choose(1, 32)
+      s <- Gen.stringOfN(n, Gen.alphaChar)
+    } yield s
 
     forAll(g) { (name: String) =>
       assert(Person.create(name) eqv Valid(Person.unsafeCreate(name)))

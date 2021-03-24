@@ -5,7 +5,7 @@ import cats.implicits._
 
 class DebtByPayee private (val debtByPayee: Map[Person, Money]) {
   def debtForPayee(person: Person): Option[Money] = debtByPayee.get(person)
-  def allPayees(): Set[Person] = debtByPayee.keySet
+  def allPayees(): List[Person] = debtByPayee.keySet.toList
 }
 
 object DebtByPayee {
@@ -37,7 +37,6 @@ object DebtByPayee {
   ): Show[DebtByPayee] =
     Show.show { d =>
       d.allPayees()
-        .toList
         .foldMap(payee =>
           s"- ${payee.show}: ${d.debtForPayee(payee).getOrElse(Money.zero).show}\n"
         )
