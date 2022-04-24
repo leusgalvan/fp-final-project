@@ -44,6 +44,6 @@ trait LiveExpenseService extends ExpenseService {
     }
 
     override def computeDebt(): ExpenseOp[DebtByPayer] =
-      State.inspect(_.expenses.foldMap(DebtByPayer.fromExpense))
+      State.inspect(_.expenses.foldMap(DebtByPayer.fromExpense).simplified)
   }
 }

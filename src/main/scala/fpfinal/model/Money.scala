@@ -12,6 +12,8 @@ class Money private (_cents: Int) {
   def cents: Int = _cents
   def dollars: Double = _cents / 100.0
   def plus(other: Money): Money = new Money(_cents + other.cents)
+  def minus(other: Money): Money = new Money(_cents - other.cents)
+  def times(n: Int): Money = new Money(_cents * n)
   def divideBy(n: Int): Option[Money] = Try(new Money(_cents / n)).toOption
 
   override def toString: String = showMoney.show(this)

@@ -37,6 +37,28 @@ class DebtByPayerSpec extends FpFinalSpec {
     }
   }
 
+  test("simplify removes cases where A and B owe each other") {
+    forAll { (p1: Person, p2: Person, m1: Money, m2: Money) =>
+      val (p2OwesP1, p1OwesP2) = if(m1 < m2) (m2, m1) else (m1, m2)
+      val d = DebtByPayer.unsafeCreate(
+        Map(
+          p1 -> DebtByPayee.unsafeCreate(Map(p2 -> p2OwesP1)),
+          p2 -> DebtByPayee.unsafeCreate(Map(p1 -> p1OwesP2))
+        )
+      ).simplified
+      assert(d.debtForPayer(p1).exists(_.debtForPayee(p2).exists(_ eqv (p2OwesP1 minus p1OwesP2))))
+      assert(d.debtForPayer(p2).isEmpty)
+    }
+  }
+
+  test("simplify works when there are no cases where A and B owe each other") {
+    forAll { (p1: Person, p2: Person, m: Money) =>
+      val d = DebtByPayer.unsafeCreate(Map(p1 -> DebtByPayee.unsafeCreate(Map(p2 -> m)))).simplified
+      assert(d.debtForPayer(p1).exists(_.debtForPayee(p2).exists(_ eqv m)))
+      assert(d.debtForPayer(p2).isEmpty)
+    }
+  }
+
   checkAll("Eq[DebtByPayer]", EqTests[DebtByPayer].eqv)
   checkAll("Monoid[DebtByPayer]", MonoidTests[DebtByPayer].monoid)
 }

@@ -19,6 +19,8 @@ object DebtByPayee {
         .combineAll
     })
 
+  def singleton(person: Person, money: Money): DebtByPayee = new DebtByPayee(Map(person -> money))
+
   implicit def eqDebtByPayee(implicit
       eqMap: Eq[Map[Person, Money]]
   ): Eq[DebtByPayee] =

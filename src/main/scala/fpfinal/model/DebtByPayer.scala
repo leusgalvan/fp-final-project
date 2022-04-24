@@ -7,6 +7,30 @@ class DebtByPayer private (val debtByPerson: Map[Person, DebtByPayee]) {
   def debtForPayer(person: Person): Option[DebtByPayee] =
     debtByPerson.get(person)
   def allPayers(): List[Person] = debtByPerson.keySet.toList
+  def simplified: DebtByPayer = {
+    def payeesFor(person: Person): List[Person] =
+      debtByPerson.get(person).toList.flatMap(_.allPayees())
+
+    def owes(p1: Person, p2: Person): Money =
+      debtByPerson.get(p2).flatMap(_.debtForPayee(p1)).getOrElse(Money.zero)
+
+    def createDebt(p1: Person, p2: Person, p1OwesP2: Money, p2OwesP1: Money): Option[DebtByPayer] = {
+      if(p2OwesP1 > p1OwesP2) {
+        val debtByPayer = new DebtByPayer(Map(p1 -> DebtByPayee.singleton(p2, p2OwesP1 minus p1OwesP2)))
+        Some(debtByPayer)
+      } else None
+    }
+
+    val debtByPayes = for {
+      p1 <- allPayers()
+      p2 <- payeesFor(p1)
+      p1OwesP2 = owes(p1, p2)
+      p2OwesP1 = owes(p2, p1)
+      d <- createDebt(p1, p2, p1OwesP2, p2OwesP1).toList
+    } yield d
+
+    debtByPayes.foldMap(identity)
+  }
 }
 
 object DebtByPayer {
