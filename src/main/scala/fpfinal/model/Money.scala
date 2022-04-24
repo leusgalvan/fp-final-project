@@ -12,6 +12,8 @@ class Money private (_cents: Int) {
   def cents: Int = _cents
   def dollars: Double = _cents / 100.0
   def plus(other: Money): Money = new Money(_cents + other.cents)
+  def minus(other: Money): Money = new Money(_cents - other.cents)
+  def times(n: Int): Money = new Money(_cents * n)
 
   /**
     * TODO: Implement division by an integer. When n is 0, the result should be None.

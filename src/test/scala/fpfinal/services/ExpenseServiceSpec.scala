@@ -49,13 +49,12 @@ class ExpenseServiceSpec extends FpFinalSpec {
         leandro -> DebtByPayee.unsafeCreate(
           Map(
             eugenia -> Money.unsafeCreate(700),
-            martin -> Money.unsafeCreate(700)
+            martin -> Money.unsafeCreate(200)
           )
         ),
         martin -> DebtByPayee.unsafeCreate(
           Map(
-            eugenia -> Money.unsafeCreate(500),
-            leandro -> Money.unsafeCreate(500)
+            eugenia -> Money.unsafeCreate(500)
           )
         )
       )

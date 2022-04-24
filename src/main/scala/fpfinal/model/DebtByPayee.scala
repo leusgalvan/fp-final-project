@@ -26,6 +26,8 @@ object DebtByPayee {
     */
   def fromExpense(expense: Expense): DebtByPayee = ???
 
+  def singleton(person: Person, money: Money): DebtByPayee = new DebtByPayee(Map(person -> money))
+
   /**
     * TODO: Implement an eq instance and their corresponding tests.
     * Two values are equal iff their debtByPayee maps are equal.
