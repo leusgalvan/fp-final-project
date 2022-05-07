@@ -8,6 +8,50 @@ import fpfinal.FpFinalSpec
 import scala.collection.immutable.SortedSet
 
 class DebtByPayeeSpec extends FpFinalSpec {
+  test("allPayees should return the payees") {
+    val personA = Person.unsafeCreate("A")
+    val personB = Person.unsafeCreate("B")
+    val moneyA = Money.unsafeCreate(1000)
+    val moneyB = Money.unsafeCreate(2000)
+    val d = DebtByPayee.unsafeCreate(
+      Map(
+        personA -> moneyA,
+        personB -> moneyB
+      )
+    )
+    assert(d.allPayees().toSet eqv Set(personA, personB))
+  }
+
+  test("getting debt for an existing payee should return it") {
+    val personA = Person.unsafeCreate("A")
+    val personB = Person.unsafeCreate("B")
+    val moneyA = Money.unsafeCreate(1000)
+    val moneyB = Money.unsafeCreate(2000)
+    val d = DebtByPayee.unsafeCreate(
+      Map(
+        personA -> moneyA,
+        personB -> moneyB
+      )
+    )
+    val debtForA = d.debtForPayee(personA)
+    assert(debtForA eqv Some(moneyA))
+  }
+
+  test("getting debt for a non-existing payee should return None") {
+    val personA = Person.unsafeCreate("A")
+    val personB = Person.unsafeCreate("B")
+    val moneyA = Money.unsafeCreate(1000)
+    val moneyB = Money.unsafeCreate(2000)
+    val d = DebtByPayee.unsafeCreate(
+      Map(
+        personA -> moneyA,
+        personB -> moneyB
+      )
+    )
+    val debtForC = d.debtForPayee(Person.unsafeCreate("C"))
+    assert(debtForC eqv None)
+  }
+
   test("payees are the participants from the expense") {
     forAll { (expense: Expense) =>
       assert(
