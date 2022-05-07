@@ -8,6 +8,23 @@ import fpfinal.common.Validations._
 
 import scala.collection.immutable.SortedSet
 
+/**
+ * Represents a single expense.
+ *
+ * The participants are the people among who this expense will be divided.
+ * Note that this set does not contain the payer.
+ *
+ * For example, assume Alice buys a pizza for 10 dollars to eat with Bob and Charly.
+ * In this case the expense information is as follows:
+ *
+ * - The payer is Alice
+ * - The amount paid is $10.00
+ * - The partipants are Bob and Charly
+ *
+ * @param payer the person who paid
+ * @param amount the amount paid
+ * @param participants the people involved in the expense (excluding the payer)
+ */
 class Expense private (
     val payer: Person,
     val amount: Money,
@@ -15,13 +32,20 @@ class Expense private (
 ) {
 
   /**
-    * TODO: Divide this amount accross the payer and the participants so each
-    * has the same debt for this expense
+    * TODO: Divide this amount across the payer and the participants so each
+    * has the same debt for this expense.
+    *
+    * For simplicity we don't care about losing cents. For example, dividing 1 dollar
+    * among 3 participants should yield 33 cents of debt for each participant.
     */
   def amountByParticipant: Money = ???
 }
 
 object Expense {
+  /**
+   * Creates an instance of a Expense without performing validations.
+   * Should only be used in tests.
+   */
   def unsafeCreate(
       payer: Person,
       amount: Money,
@@ -48,11 +72,15 @@ object Expense {
   )(implicit eqPerson: Eq[Person]): IsValid[Expense] = ???
 
   /**
-    * TODO: Implement an Eq instance by comparing every field.
-    * Parameterize it so that we can pass definitions of Eq for
-    * each of the types we need to compare (i.e.: Person, Money, NonEmptySet[Person]).
+    * TODO: Implement an Eq instance by comparing every field,
+    * using the corresponding Eq instance for each type
+    * (i.e.: Person, Money, NonEmptySet[Person]).
     */
-  implicit def eqExpense = ???
+  implicit def eqExpense(implicit
+    eqPerson: Eq[Person],
+    eqMoney: Eq[Money],
+    eqParticipants: Eq[NonEmptySet[Person]]
+  ): Eq[Expense] = ???
 
   /**
     * TODO: Implement a Show instance with the following format:
