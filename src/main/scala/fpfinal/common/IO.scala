@@ -4,6 +4,12 @@ import cats._
 
 import scala.annotation.tailrec
 
+/**
+ * Simple implementation of the IO monad which provides the ability to wrap pure values,
+ * suspend computations and combine them via flatMap.
+ *
+ * Uses a trampoline to avoid stack overflows.
+ */
 trait IO[+A] {
   import IO._
 
