@@ -7,9 +7,25 @@ import fpfinal.app.Syntax._
 import fpfinal.common.Validations._
 import fpfinal.model.{Expense, Money, Person}
 
+/**
+ * Represents a single command of the application (e.g. Add an expense).
+ */
 sealed trait Command {
+  /**
+   * The name of the command, which will be shown to the user.
+   */
   val name: String
+
+  /**
+   * Executes the command.
+   *
+   * @return a message to show to the user in case of success (e.g. "Person added successfully!")
+   */
   def execute(): AppOp[SuccessMsg]
+
+  /**
+   * @return whether or not this is the exit command
+   */
   def isExit: Boolean = false
 }
 
@@ -17,6 +33,9 @@ object Command {
   implicit val showCommand: Show[Command] = Show.show(_.name)
 }
 
+/**
+ * A command which exits the application.
+ */
 object ExitCommand extends Command {
   override val name: String = "Exit app"
 
@@ -25,6 +44,12 @@ object ExitCommand extends Command {
   override def execute(): AppOp[SuccessMsg] = "Bye :)".pure[AppOp]
 }
 
+/**
+ * A command which adds an expense to the application state.
+ *
+ * It asks the user for the payer's name, the amount that was paid,
+ * and the list of participants.
+ */
 object AddExpenseCommand extends Command {
   val name = "Add expense"
 
@@ -106,24 +131,25 @@ object AddExpenseCommand extends Command {
   }
 }
 
+/**
+ * A command which adds a person to the application state.
+ *
+ * It only asks the user for the name of the person.
+ */
 case object AddPersonCommand extends Command {
   override val name: String = "Add person"
 
-  case class AddPersonData(
-      name: String
-  )
+  case class AddPersonData(name: String)
 
   override def execute(): AppOp[SuccessMsg] = {
-    def validateData(
-        name: String
-    ): IsValid[AddPersonData] = {
+    def validateData(name: String): IsValid[AddPersonData] = {
       nonEmptyString(name).map(AddPersonData.apply)
     }
 
     def readData(): AppOp[AddPersonData] = {
       for {
-        env <- readEnv
-        name <- env.console.readLine("Enter name: ").toAppOp
+        env       <- readEnv
+        name      <- env.console.readLine("Enter name: ").toAppOp
         validData <- validateData(name).toAppOp
       } yield validData
     }
@@ -138,18 +164,27 @@ case object AddPersonCommand extends Command {
   }
 }
 
+/**
+ * A command which computes the debt given all the people and expenses in the
+ * application state and prints a report to console.
+ *
+ * The DebtByPayer show instance contains the output format.
+ */
 case object ComputeDebtCommand extends Command {
   override val name: String = "Compute debt"
 
   override def execute(): AppOp[SuccessMsg] = {
     for {
-      env <- readEnv
+      env       <- readEnv
       payerDebt <- env.expenseService.computeDebt().toAppOp
-      _ <- env.console.printLine(payerDebt.show).toAppOp
+      _         <- env.console.printLine(payerDebt.show).toAppOp
     } yield "Debt computed successfully"
   }
 }
 
+/**
+ * A command which outputs the list of people present in the application state.
+ */
 case object ListAllPeopleCommand extends Command {
   override val name: String = "List all people"
 
