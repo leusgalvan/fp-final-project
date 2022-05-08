@@ -7,7 +7,7 @@ import fpfinal.model.{DebtByPayer, Expense}
 import fpfinal.service.ExpenseService.ExpenseOp
 
 /**
- * A class for computing the debts of all the people involved in the expenses.
+ * A trait for computing the debts of all the people involved in the expenses.
  *
  * It uses the State monad to keep track of the expenses that the user of the application
  * has added so far.
