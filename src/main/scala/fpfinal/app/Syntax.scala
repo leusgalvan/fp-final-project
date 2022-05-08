@@ -7,8 +7,18 @@ import fpfinal.common.IO
 import fpfinal.service.ExpenseService.ExpenseOp
 import fpfinal.service.PersonService.PersonOp
 
+/**
+ * Extension methods for different types in the application.
+ */
 object Syntax {
   implicit class IOOps[A](fa: IO[A]) {
+    /**
+     * Lifts an IO[A] into an AppOp[A].
+     *
+     * An AppOp[A] has three layers, namely (from inner to outer):
+     * - An EitherT for error handling: in our case
+     * @return
+     */
     def toAppOp: AppOp[A] = {
       val errorOr: ErrorOr[A] = EitherT.liftF(fa)
       val st: St[A] = StateT.liftF(errorOr)
@@ -17,7 +27,6 @@ object Syntax {
   }
 
   implicit class PersonOps[A](fa: PersonOp[A]) {
-
     /**
       * TODO: Translate between a PersonOp and an AppOp.
       *
@@ -36,7 +45,6 @@ object Syntax {
               s"""Errors: ${e.mkString_("[", ", ", "]")}"""
             }
         )
-
       }
       val st: St[A] = StateT.liftF(errorOr)
       ReaderT.liftF(st)
@@ -54,12 +62,24 @@ object Syntax {
   }
 
   implicit class AppOps[A](fa: AppOp[A]) {
+    /**
+     * Syntax method that runs an application with an environment (containing
+     * all the needed dependencies such as the services, the controller, etc.)
+     * and an initial state, which holds the initial expenses and people
+     * (for example the empty state with no people nor expenses).
+     *
+     * @return an either with Left indicatin an error, or Right providing a tuple with the resulting
+     *         state and return value of the application
+     */
     def unsafeRunApp(
         environment: Environment,
         initialState: AppState
     ): Either[Error, (AppState, A)] =
       fa.run(environment).run(initialState).value.run
 
+    /**
+     * Similar to unsafeRunApp but we only return the state.
+     */
     def unsafeRunAppS(
         environment: Environment,
         initialState: AppState

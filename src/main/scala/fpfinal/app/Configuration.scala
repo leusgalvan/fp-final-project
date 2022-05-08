@@ -9,6 +9,9 @@ import fpfinal.service.{
   PersonService
 }
 
+/**
+ * Common types and values used throughout the application.
+ */
 object Configuration {
   type IsValid[A] = Validated[NonEmptyChain[String], A]
   type Error = String
