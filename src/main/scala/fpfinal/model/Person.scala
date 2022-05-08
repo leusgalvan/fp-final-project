@@ -6,11 +6,25 @@ import fpfinal.app.Configuration.IsValid
 import fpfinal.common.Validations._
 import fpfinal.model.Person.showPerson
 
+/**
+ * A class for representing a person.
+ *
+ * @param name the name of the person
+ */
 class Person private (val name: String) {
+  /**
+   * @return a string representation of this person which just shows the name
+   */
   override def toString: String = showPerson.show(this)
 }
 
 object Person {
+  /**
+   * Creates an instance of Money without performing any validations.
+   * Should only be used in tests.
+   *
+   * @param name the amount expressed in cents
+   */
   def unsafeCreate(name: String): Person = new Person(name)
 
   /**
