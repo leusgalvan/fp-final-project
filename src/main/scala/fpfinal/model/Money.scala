@@ -45,7 +45,7 @@ class Money private (_cents: Int) {
   def times(n: Int): Money = new Money(_cents * n)
 
   /**
-    * TODO: Implement division by an integer. When n is 0, the result should be None.
+    * TODO #4: Implement division by an integer. When n is 0, the result should be None.
     * Otherwise, it should be a Some.
     *
     * For simplicity we don't care about losing cents. For example, dividing 1 dollar
@@ -72,7 +72,7 @@ object Money {
   val zero: Money = new Money(0)
 
   /**
-    * TODO: Create a validated Money object that represents this dollars amount.
+    * TODO #5: Create a validated Money object that represents this dollars amount.
     * The only validation to perform is:
     * - Amount should be non-negative
     */
@@ -86,7 +86,7 @@ object Money {
     Eq.instance((m1, m2) => m1.cents === m2.cents)
 
   /**
-    * TODO: Implement and instance of Order for Money that compares its cents.
+    * TODO #6: Implement and instance of Order for Money that compares its cents.
     * Use the given Order instance for comparing any Int values.
     */
   implicit def orderMoney(implicit orderInt: Order[Int]): Order[Money] = ???

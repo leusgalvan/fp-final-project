@@ -49,5 +49,5 @@ class ExpenseSpec extends FpFinalSpec {
     )
   }
 
-  // Typeclass instances tests here...
+  // TODO #11: Add the missing typeclass tests for Eq
 }

@@ -50,7 +50,7 @@ class MoneySpec extends FpFinalSpec {
     }
   }
 
-  // Typeclass instances tests here...
+  // TODO #7: Add the missing Order typeclass tests
   checkAll("Eq[Money]", EqTests[Money].eqv)
   checkAll("Monoid[Money]", MonoidTests[Money].monoid)
 }

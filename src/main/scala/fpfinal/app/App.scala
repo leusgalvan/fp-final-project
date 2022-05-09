@@ -79,7 +79,7 @@ object App {
       } yield command.isExit
 
     /**
-      * TODO: Implement a function that executes a command and handles error by
+      * TODO #30: Implement a function that executes a command and handles error by
       * printing them to console.
       *
       * The app should be able to continue normal execution afterwards.

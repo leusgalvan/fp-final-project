@@ -66,12 +66,12 @@ object PersonService {
 }
 
 /**
-  * TODO: Provide a LivePersonService with an implementation for PersonService.
+  * TODO #22: Provide a LivePersonService with an implementation for PersonService.
   */
 trait LivePersonService extends PersonService {
   override val personService: Service = new Service {
     /**
-     * Finds a person with the given name, returning if it finds it in the state,
+     * Finds a person with the given name, returning it if it finds it in the state,
      * or yielding None otherwise.
      */
     override def findByName(name: String): PersonOp[Option[Person]] = ???

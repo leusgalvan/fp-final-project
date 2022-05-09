@@ -59,5 +59,6 @@ class DebtByPayerSpec extends FpFinalSpec {
     }
   }
 
+  // TODO #21: Add the missing typeclass tests for Monoid
   checkAll("Eq[DebtByPayer]", EqTests[DebtByPayer].eqv)
 }

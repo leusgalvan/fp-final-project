@@ -100,5 +100,5 @@ class DebtByPayeeSpec extends FpFinalSpec {
     }
   }
 
-  // Typeclass instances tests here...
+  // TODO #17: Add typeclass tests for Eq and Monoid
 }

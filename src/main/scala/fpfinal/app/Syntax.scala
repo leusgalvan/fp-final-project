@@ -35,7 +35,7 @@ object Syntax {
 
   implicit class PersonOps[A](fa: PersonOp[A]) {
     /**
-      * TODO: Translate between a PersonOp and an AppOp.
+      * TODO #25: Translate between a PersonOp and an AppOp.
       *
       * Read the description of toAppOp in ExpenseOps carefully, as this implementation should be
       * really similar.

@@ -64,20 +64,20 @@ object AddExpenseCommand extends Command {
   def execute(): AppOp[SuccessMsg] = {
     def readPayer(): AppOp[String] = {
       for {
-        env <- readEnv
+        env  <- readEnv
         name <- env.console.readLine("Enter payer's name: ").toAppOp
       } yield name
     }
 
     def readAmount(): AppOp[String] = {
       for {
-        env <- readEnv
+        env    <- readEnv
         amount <- env.console.readLine("Enter amount: ").toAppOp
       } yield amount
     }
 
     /**
-      * TODO: Implement a function that reads participant names from console until the
+      * TODO #26: Implement a function that reads participant names from console until the
       * user enters END to finish.
       *
       * Extra points: implement it using ME.tailRecM
@@ -85,7 +85,7 @@ object AddExpenseCommand extends Command {
     def readParticipants(): AppOp[List[String]] = ???
 
     /**
-      * TODO: Use the helper functions in common.Validations and return a validated
+      * TODO #27: Use the helper functions in common.Validations and return a validated
       * instance of AddExpenseData. The validations to perform are:
       * - payer should be a nonempty string
       * - amount should be a valid double
@@ -99,15 +99,15 @@ object AddExpenseCommand extends Command {
 
     def readData(): AppOp[AddExpenseData] = {
       for {
-        payer <- readPayer()
-        amount <- readAmount()
+        payer        <- readPayer()
+        amount       <- readAmount()
         participants <- readParticipants()
-        validData <- validateData(payer, amount, participants).toAppOp
+        validData    <- validateData(payer, amount, participants).toAppOp
       } yield validData
     }
 
     /**
-      * TODO: Implement a function that finds a person by name.
+      * TODO #28: Implement a function that finds a person by name.
       *
       * It should be a wrapper of the PersonService analogous function,
       * handling translation between types and converting None results to errors
@@ -120,13 +120,13 @@ object AddExpenseCommand extends Command {
     }
 
     for {
-      env <- readEnv
-      data <- readData()
-      payer <- findPerson(data.payer)
-      amount <- Money.dollars(data.amount).toAppOp
+      env          <- readEnv
+      data         <- readData()
+      payer        <- findPerson(data.payer)
+      amount       <- Money.dollars(data.amount).toAppOp
       participants <- data.participants.traverse { findPerson }
-      expense <- Expense.create(payer, amount, participants).toAppOp
-      _ <- env.expenseService.addExpense(expense).toAppOp
+      expense      <- Expense.create(payer, amount, participants).toAppOp
+      _            <- env.expenseService.addExpense(expense).toAppOp
     } yield "Expense created successfully"
   }
 }
@@ -155,7 +155,7 @@ case object AddPersonCommand extends Command {
     }
 
     /**
-      * TODO: Use readData() to read person data from console and use it to add a
+      * TODO #29: Use readData() to read person data from console and use it to add a
       * new person to the state.
       *
       * Upon successful completion, return the message 'Person created successfully'.
@@ -190,15 +190,13 @@ case object ListAllPeopleCommand extends Command {
 
   override def execute(): AppOp[SuccessMsg] = {
     for {
-      env <- readEnv
+      env    <- readEnv
       people <- env.personService.getAllPeople().toAppOp
-      _ <-
-        env.console
-          .printLine(
-            s"""List of people:
-               |${people.map(p => s"- ${p.show}").mkString("\n")}""".stripMargin
-          )
-          .toAppOp
+      _      <- env.console.printLine(
+                    s"""List of people:
+                     |${people.map(p => s"- ${p.show}").mkString("\n")}""".stripMargin
+                )
+                .toAppOp
     } yield "All people listed!"
   }
 }

@@ -43,10 +43,17 @@ object IO {
       case Done(a)       => Right(a)
       case More(thunk)   => resume(safeApply(thunk()), eh)
       case RaiseError(e) =>
-        eh match {
-          case Some(eha) => resume(eha(e), None)
-          case None      => throw e
-        }
+        /**
+         * TODO #24: Implement the case where the computation represents an error.
+         *
+         * There are two posibilities:
+         * - We don't have a registered error handler (eh is None).
+         *     In this case we just throw the exception.
+         * - We have a register error handler (eh is Some)
+         *     In this case we apply the error handler on the error, and we resume the computation
+         *     without the error handler (i.e. an error handler can be consumed only once).
+         */
+        ???
       case HandleErrorWith(ioa, newEh) => resume(ioa.asInstanceOf[IO[A]], Some(newEh.asInstanceOf[ErrorHandler[A]]))
       case FlatMap(t, f) =>
         t match {
@@ -67,7 +74,7 @@ object IO {
   def suspend[A](a: => A): IO[A] =
     More { () => Done(a) }
 
-  implicit val ioMonad: MonadError[IO, Throwable] = new MonadError[IO, Throwable] {
+  implicit val ioMonadError: MonadError[IO, Throwable] = new MonadError[IO, Throwable] {
     override def pure[A](x: A): IO[A] = Done(x)
 
     override def flatMap[A, B](fa: IO[A])(f: A => IO[B]): IO[B] = FlatMap(fa, f)

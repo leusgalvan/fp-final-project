@@ -11,12 +11,12 @@ import scala.collection.immutable.SortedSet
  */
 object Validations {
   /**
-    * TODO: Check that this String's length does not exceed the provided limit.
+    * TODO #1: Check that this String's length does not exceed the provided limit.
     */
   def maxLength(s: String, n: Int): IsValid[String] = ???
 
   /**
-    * TODO: Turn this String into a validated double
+    * TODO #2: Turn this String into a validated double
     */
   def double(s: String): IsValid[Double] = ???
 
