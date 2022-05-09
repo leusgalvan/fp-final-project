@@ -75,7 +75,7 @@ object App {
         command       <- ME.fromOption(env.controller.getCommandByNumber(commandNumber), "Command not found")
         _             <- env.console.printLine("").toAppOp
         successMsg    <- command.execute()
-        _             <- env.console.printLine(s"\n$successMsg\n").toAppOp
+        _             <- env.console.printLine(s"\n$successMsg\n", Console.Success).toAppOp
       } yield command.isExit
 
     /**

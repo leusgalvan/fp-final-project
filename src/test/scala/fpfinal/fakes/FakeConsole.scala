@@ -2,6 +2,7 @@ package fpfinal.fakes
 
 import fpfinal.app.Console
 import fpfinal.common.IO
+import scala.io.AnsiColor._
 
 trait FakeConsole extends Console {
   var linesToRead: List[String]
@@ -16,7 +17,7 @@ trait FakeConsole extends Console {
       }
     }
 
-    override def printLine(line: String): IO[Unit] =
+    override def printLine(line: String, level: Console.Level = Console.Info): IO[Unit] =
       IO {
         linesWritten = linesWritten :+ line
       }
