@@ -46,13 +46,13 @@ object App {
         )
         _ <- env.console.printLine("").toAppOp
         successMsg <- command.execute()
-        _ <- env.console.printLine(s"\n$successMsg\n").toAppOp
+        _ <- env.console.printLine(s"\n$successMsg\n", Console.Success).toAppOp
       } yield command.isExit
 
     def executeCommandWithRecovery: AppOp[Boolean] =
       ME.handleErrorWith(executeCommand)(error =>
         readEnv.flatMap(env =>
-          env.console.printLine(s"\n$error\n").as(false).toAppOp
+          env.console.printLine(s"\n$error\n", Console.Error).as(false).toAppOp
         )
       )
 
