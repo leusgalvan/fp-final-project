@@ -10,7 +10,8 @@ import fpfinal.service.PersonService.PersonOp
 object Syntax {
   implicit class IOOps[A](fa: IO[A]) {
     def toAppOp: AppOp[A] = {
-      val errorOr: ErrorOr[A] = EitherT.liftF(fa)
+      val attemptIO: IO[Either[Error, A]] = fa.attempt.map(_.leftMap(_.getMessage))
+      val errorOr: ErrorOr[A] = EitherT(attemptIO)
       val st: St[A] = StateT.liftF(errorOr)
       ReaderT.liftF(st)
     }
