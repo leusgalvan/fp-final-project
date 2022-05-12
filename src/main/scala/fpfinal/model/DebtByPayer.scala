@@ -23,12 +23,12 @@ class DebtByPayer private (val debtByPerson: Map[Person, DebtByPayee]) {
   /**
     * TODO #18: Get the debt summary by payee for this payer
     */
-  def debtForPayer(person: Person): Option[DebtByPayee] = ???
+  def debtForPayer(person: Person): Option[DebtByPayee] = debtByPerson.get(person)
 
   /**
     * TODO #19: Get all the payers in a list
     */
-  def allPayers(): List[Person] = ???
+  def allPayers(): List[Person] = debtByPerson.keySet.toList
 
   /**
    * Return a simplified version of this DebtByPayer object which does not contain mutual
@@ -96,7 +96,8 @@ object DebtByPayer {
     */
   implicit def monoidDebtByPayer(implicit
       monoidMap: Monoid[Map[Person, DebtByPayee]]
-  ): Monoid[DebtByPayer] = ???
+  ): Monoid[DebtByPayer] =
+    monoidMap.imap(m => new DebtByPayer(m))(_.debtByPerson)
 
   implicit def showDebtByPayer(implicit
       showPerson: Show[Person],

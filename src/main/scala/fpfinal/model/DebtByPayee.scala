@@ -23,12 +23,12 @@ class DebtByPayee private (val debtByPayee: Map[Person, Money]) {
   /**
     * TODO #12: Return the debt for this payee
     */
-  def debtForPayee(person: Person): Option[Money] = ???
+  def debtForPayee(person: Person): Option[Money] = debtByPayee.get(person)
 
   /**
     * TODO #13: Return all the payees as a list
     */
-  def allPayees(): List[Person] = ???
+  def allPayees(): List[Person] = debtByPayee.keySet.toList
 }
 
 object DebtByPayee {
@@ -47,7 +47,11 @@ object DebtByPayee {
     * For simplicity we don't care about losing cents. For example, dividing 1 dollar
     * among 3 participants should yield 33 cents of debt for each participant.
     */
-  def fromExpense(expense: Expense): DebtByPayee = ???
+  def fromExpense(expense: Expense): DebtByPayee = new DebtByPayee(
+    expense.participants.toList
+      .map(p => Map(p -> expense.amountByParticipant))
+      .combineAll
+  )
 
   /**
    * Creates an instance of DebtByPayee with exactly one payee and their debt.
@@ -63,7 +67,9 @@ object DebtByPayee {
     */
   implicit def eqDebtByPayee(implicit
       eqMap: Eq[Map[Person, Money]]
-  ): Eq[DebtByPayee] = ???
+  ): Eq[DebtByPayee] = Eq.instance { (d1, d2) =>
+    d1.debtByPayee eqv d2.debtByPayee
+  }
 
   /**
     * TODO #16: Implement a monoid instance.
@@ -73,7 +79,8 @@ object DebtByPayee {
     */
   implicit def monoidDebtByPayee(implicit
       monoidMap: Monoid[Map[Person, Money]]
-  ): Monoid[DebtByPayee] = ???
+  ): Monoid[DebtByPayee] =
+    monoidMap.imap(m => new DebtByPayee(m))(_.debtByPayee)
 
   implicit def showDebtByPayee(implicit
       personShow: Show[Person],

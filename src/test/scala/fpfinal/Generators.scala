@@ -14,26 +14,37 @@ import org.scalacheck.{Arbitrary, Gen}
 trait Generators {
 
   /**
-    * TODO: implement an arbitrary of Person.
+    * TODO #3a: implement an arbitrary of Person.
     *
     * You can use Person.unsafeCreate as long as you take
     * care of only producing valid values (check out
     * the constraints in Person.create) .
     */
-  implicit val personArb: Arbitrary[Person] = ???
+  implicit val personArb: Arbitrary[Person] = Arbitrary {
+    for {
+      n <- Gen.choose(1, 32)
+      name <- Gen.stringOfN(n, Gen.alphaChar)
+    } yield Person.unsafeCreate(name)
+  }
 
   implicit val moneyArb: Arbitrary[Money] = Arbitrary {
     Gen.choose(1, 1e9.toInt).map(Money.unsafeCreate)
   }
 
   /**
-    * TODO: Use the provided arbitraries and the Expense.unsafeCreate method
+    * TODO #3b: Use the provided arbitraries and the Expense.unsafeCreate method
     * to create an instance of Arbitrary[Expense]
     */
   implicit def expenseArb(implicit
       arbPerson: Arbitrary[Person],
       arbMoney: Arbitrary[Money]
-  ): Arbitrary[Expense] = ???
+  ): Arbitrary[Expense] = Arbitrary {
+    for {
+      person <- arbPerson.arbitrary
+      money <- arbMoney.arbitrary
+      participants <- Gen.nonEmptyListOf(arbPerson.arbitrary)
+    } yield Expense.unsafeCreate(person, money, participants)
+  }
 
   implicit val payeeDebtArb: Arbitrary[DebtByPayee] = Arbitrary {
     Gen
@@ -92,7 +103,7 @@ trait Generators {
     }
 
   /**
-    * TODO: implement an arbitrary of PersonOp[A].
+    * TODO #3c: implement an arbitrary of PersonOp[A].
     *
     * One possible implementation is to create a State
     * whose run function ignores the current state and just
@@ -101,7 +112,12 @@ trait Generators {
   implicit def personOpArb[A](implicit
       arbA: Arbitrary[A],
       arbPersonState: Arbitrary[PersonState]
-  ): Arbitrary[PersonOp[A]] = ???
+  ): Arbitrary[PersonOp[A]] = Arbitrary {
+    for {
+      a <- arbA.arbitrary
+      ps <- arbPersonState.arbitrary
+    } yield State((_: PersonState) => (ps, a))
+  }
 
   implicit def isValidArb[A](implicit
       arbA: Arbitrary[A]

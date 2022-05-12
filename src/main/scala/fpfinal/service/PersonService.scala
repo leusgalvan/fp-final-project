@@ -74,16 +74,19 @@ trait LivePersonService extends PersonService {
      * Finds a person with the given name, returning it if it finds it in the state,
      * or yielding None otherwise.
      */
-    override def findByName(name: String): PersonOp[Option[Person]] = ???
+    override def findByName(name: String): PersonOp[Option[Person]] =
+      State.inspect(_.personByName.get(name))
 
     /**
      * Adds a person to the state.
      */
-    override def addPerson(person: Person): PersonOp[Unit] = ???
+    override def addPerson(person: Person): PersonOp[Unit] =
+      State.modify(_.addPerson(person))
 
     /**
      * Returns all the people in the state.
      */
-    override def getAllPeople(): PersonOp[List[Person]] = ???
+    override def getAllPeople(): PersonOp[List[Person]] =
+      State.inspect(_.personByName.values.toList)
   }
 }

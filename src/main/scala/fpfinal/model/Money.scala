@@ -45,13 +45,13 @@ class Money private (_cents: Int) {
   def times(n: Int): Money = new Money(_cents * n)
 
   /**
-    * TODO #4: Implement division by an integer. When n is 0, the result should be None.
+    * TODO #6: Implement division by an integer. When n is 0, the result should be None.
     * Otherwise, it should be a Some.
     *
     * For simplicity we don't care about losing cents. For example, dividing 1 dollar
     * by 3 should yield 33 cents.
     */
-  def divideBy(n: Int): Option[Money] = ???
+  def divideBy(n: Int): Option[Money] = Try(new Money(_cents / n)).toOption
 
   /**
    * @return a string representation of this money amount in dollars, with two decimal places
@@ -72,11 +72,15 @@ object Money {
   val zero: Money = new Money(0)
 
   /**
-    * TODO #5: Create a validated Money object that represents this dollars amount.
+    * TODO #7: Create a validated Money object that represents this dollars amount.
     * The only validation to perform is:
     * - Amount should be non-negative
     */
-  def dollars(amount: Double): IsValid[Money] = ???
+  def dollars(amount: Double): IsValid[Money] =
+    nonNegative(amount).map { dls =>
+      val cents = (dls * 100).toInt
+      new Money(cents)
+    }
 
   implicit val monoidMoney: Monoid[Money] = Monoid.instance(zero, _ plus _)
 
@@ -86,8 +90,8 @@ object Money {
     Eq.instance((m1, m2) => m1.cents === m2.cents)
 
   /**
-    * TODO #6: Implement and instance of Order for Money that compares its cents.
+    * TODO #4: Implement and instance of Order for Money that compares its cents.
     * Use the given Order instance for comparing any Int values.
     */
-  implicit def orderMoney(implicit orderInt: Order[Int]): Order[Money] = ???
+  implicit def orderMoney(implicit orderInt: Order[Int]): Order[Money] = Order.by(_.cents)
 }

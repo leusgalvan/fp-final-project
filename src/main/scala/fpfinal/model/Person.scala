@@ -28,12 +28,15 @@ object Person {
   def unsafeCreate(name: String): Person = new Person(name)
 
   /**
-    * TODO #3: Create a validated instance of Person. There are three validations:
+    * TODO #3d: Create a validated instance of Person. There are three validations:
     * - The name should not be empty
     * - The name should only contain letters
     * - The name should be at most 32 chars long
     */
-  def create(name: String): IsValid[Person] = ???
+  def create(name: String): IsValid[Person] =
+    (allLetters(name), nonEmptyString(name), maxLength(name, 32)).mapN(
+      (_, _, _) => new Person(name)
+    )
 
   implicit val showPerson: Show[Person] = Show.show(_.name)
 

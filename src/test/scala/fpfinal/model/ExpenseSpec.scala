@@ -49,5 +49,15 @@ class ExpenseSpec extends FpFinalSpec {
     )
   }
 
-  // TODO #11: Add the missing typeclass tests for Eq
+  test("calculating amount by participant is correct up to 1 dollar tolerance") {
+    forAll { (expense: Expense) =>
+      val money = expense.amountByParticipant
+      val centsTol = 100
+      val noPeople = 1 + expense.participants.length
+      assert(expense.amount.cents - money.times(noPeople).cents <= centsTol)
+    }
+  }
+
+  // TODO #10: Add the missing typeclass tests for Eq
+  checkAll("Eq[Expense]", EqTests[Expense].eqv)
 }

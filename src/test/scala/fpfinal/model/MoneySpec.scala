@@ -2,7 +2,7 @@ package fpfinal.model
 
 import cats.data.Validated.Valid
 import cats.implicits._
-import cats.kernel.laws.discipline.{EqTests, MonoidTests}
+import cats.kernel.laws.discipline.{EqTests, MonoidTests, OrderTests}
 import fpfinal.FpFinalSpec
 import org.scalacheck.{Arbitrary, Gen}
 
@@ -50,7 +50,8 @@ class MoneySpec extends FpFinalSpec {
     }
   }
 
-  // TODO #7: Add the missing Order typeclass tests
+  // TODO #5: Add the missing Order typeclass tests
   checkAll("Eq[Money]", EqTests[Money].eqv)
   checkAll("Monoid[Money]", MonoidTests[Money].monoid)
+  checkAll("Order[Money]", OrderTests[Money].order)
 }
