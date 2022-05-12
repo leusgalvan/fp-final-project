@@ -59,5 +59,4 @@ class ExpenseSpec extends FpFinalSpec {
   }
 
   // TODO #10: Add the missing typeclass tests for Eq
-  checkAll("Eq[Expense]", EqTests[Expense].eqv)
 }

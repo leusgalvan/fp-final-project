@@ -53,10 +53,7 @@ object IO {
          *     In this case we apply the error handler on the error, and we resume the computation
          *     without the error handler (i.e. an error handler can be consumed only once).
          */
-        eh match {
-          case Some(eha) => resume(eha(e), None)
-          case None      => throw e
-        }
+        ???
       case HandleErrorWith(ioa, newEh) => resume(ioa.asInstanceOf[IO[A]], Some(newEh.asInstanceOf[ErrorHandler[A]]))
       case FlatMap(t, f) =>
         t match {

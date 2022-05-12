@@ -40,13 +40,7 @@ object Syntax {
       * Read the description of toAppOp in ExpenseOps carefully, as this implementation should be
       * really similar.
       */
-    def toAppOp: AppOp[A] = {
-      val st: St[A] = StateT { appState =>
-        val (faS, faA) = fa.run(appState.personState).value
-        (appState.copy(personState = faS), faA).pure[ErrorOr]
-      }
-      ReaderT.liftF(st)
-    }
+    def toAppOp: AppOp[A] = ???
   }
 
   implicit class ValidOps[A](fa: IsValid[A]) {

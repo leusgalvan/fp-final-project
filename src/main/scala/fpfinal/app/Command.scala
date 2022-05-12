@@ -82,15 +82,7 @@ object AddExpenseCommand extends Command {
       *
       * Extra points: implement it using ME.tailRecM
       */
-    def readParticipants(): AppOp[List[String]] = {
-      val msg = "Enter name of participant (or END to finish): "
-      ME.tailRecM(List[String]()) { (xs: List[String]) =>
-        for {
-          env <- readEnv
-          participant <- env.console.readLine(msg).toAppOp
-        } yield if(participant == "END") Right(xs) else Left(participant :: xs)
-      }
-    }
+    def readParticipants(): AppOp[List[String]] = ???
 
     /**
       * TODO #27: Use the helper functions in common.Validations and return a validated
@@ -103,15 +95,7 @@ object AddExpenseCommand extends Command {
         payer: String,
         amount: String,
         participants: List[String]
-    ): IsValid[AddExpenseData] = {
-      (
-        nonEmptyString(payer),
-        double(amount),
-        participants.traverse(nonEmptyString)
-      ).mapN { (p, a, ps) =>
-        AddExpenseData(p, a, ps)
-      }
-    }
+    ): IsValid[AddExpenseData] = ???
 
     def readData(): AppOp[AddExpenseData] = {
       for {
@@ -132,14 +116,7 @@ object AddExpenseCommand extends Command {
       *
       * Hint: Use ME.fromOption
       */
-    def findPerson(name: String): AppOp[Person] = {
-      lazy val msg = s"Person not found: $name"
-      for {
-        env       <- readEnv
-        personOpt <- env.personService.findByName(name).toAppOp
-        person    <- ME.fromOption(personOpt, msg)
-      } yield person
-    }
+    def findPerson(name: String): AppOp[Person] = ???
 
     for {
       env          <- readEnv
@@ -182,12 +159,7 @@ case object AddPersonCommand extends Command {
       *
       * Upon successful completion, return the message 'Person created successfully'.
       */
-    for {
-      env    <- readEnv
-      data   <- readData()
-      person <- Person.create(data.name).toAppOp
-      _      <- env.personService.addPerson(person).toAppOp
-    } yield "Person created successfully"
+    ???
   }
 }
 

@@ -33,10 +33,7 @@ object Person {
     * - The name should only contain letters
     * - The name should be at most 32 chars long
     */
-  def create(name: String): IsValid[Person] =
-    (allLetters(name), nonEmptyString(name), maxLength(name, 32)).mapN(
-      (_, _, _) => new Person(name)
-    )
+  def create(name: String): IsValid[Person] = ???
 
   implicit val showPerson: Show[Person] = Show.show(_.name)
 
