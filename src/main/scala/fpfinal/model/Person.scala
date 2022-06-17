@@ -20,10 +20,10 @@ class Person private (val name: String) {
 
 object Person {
   /**
-   * Creates an instance of Money without performing any validations.
+   * Creates an instance of Person without performing any validations.
    * Should only be used in tests.
    *
-   * @param name the amount expressed in cents
+   * @param name the name of the person
    */
   def unsafeCreate(name: String): Person = new Person(name)
 
